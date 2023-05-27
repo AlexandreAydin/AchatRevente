@@ -16,7 +16,7 @@ class SecurityController extends AbstractController
     #[Route('/connexion', name: 'app_security.login')]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('security/pages/login.html.twig', [
+        return $this->render('pages/security/login.html.twig', [
           'last_username' => $authenticationUtils->getLastUsername(),
           'error'=>$authenticationUtils->getLastAuthenticationError()
         ]);
@@ -28,8 +28,8 @@ class SecurityController extends AbstractController
         
     }
 
-    #[Route('/inscription',name:'app_security_register',methods:['GET','POST'])]
-    public function register(HttpFoundationRequest $request, EntityManagerInterface $manager)
+    #[Route('/inscription',name:'app_security.registration',methods:['GET','POST'])]
+    public function registration(HttpFoundationRequest $request, EntityManagerInterface $manager)
     {
         $user = new User();
         $user->setRoles(['ROLE_USER']);
