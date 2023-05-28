@@ -24,6 +24,9 @@ class Article
     private ?float $price = null;
 
     #[ORM\Column]
+    private ?bool $isPublic = false;
+
+    #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
@@ -79,6 +82,19 @@ class Article
 
         return $this;
     }
+
+    public function isIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+    
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
