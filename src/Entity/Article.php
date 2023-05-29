@@ -40,7 +40,13 @@ class Article
     private ?string $city = null;
 
     #[ORM\Column]
-    private ?int $postcode = null;
+    private ?int $postCode = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -144,14 +150,14 @@ class Article
         return $this;
     }
 
-    public function getPostcode(): ?int
+    public function getPostCode(): ?int
     {
-        return $this->postcode;
+        return $this->postCode;
     }
 
-    public function setPostcode(int $postcode): self
+    public function setPostCode(int $postCode): self
     {
-        $this->postcode = $postcode;
+        $this->postCode = $postCode;
 
         return $this;
     }
