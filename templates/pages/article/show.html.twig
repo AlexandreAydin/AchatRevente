@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+
+
+    {% block title %}
+	AcahtRevente
+	{{ article.title }}
+
+
+{% endblock %}
+
+
+{% block body %}  
+    <div class="container">
+
+		<h1 class="mt-4">{{ article.title }}</h1>
+
+		<div> 
+			<span class="badge bg-primary">Créée le
+				{{ article.createdAt|date('d/m/Y') }}</span>
+		</div>
+
+
+		<div class="mt-4">
+			{% if article.price %}
+				<p>prix : {{ article.price }} €</p>
+			{% else %}
+				<p>Prix non renseigné</p>
+			{% endif %}
+		</div>
+
+		<div class="mt-4">
+			{{ article.description|raw }}
+		</div>
+
+
+	</div>
+
+{% endblock %}

@@ -1,7 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ArticleController!{% endblock %}
+{% block title %}AchatRevente - Mes Annonces
+{% endblock %}
 
 {% block body %}
-cc
+	<div class="container mt-4">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success mt-4">
+				{{ message }}
+			</div>
+		{% endfor %}
+		{% if articles|length > 0 %}
+			<h1>Mes annonces</h1>
+
+			<a href="{{ path('app_new.ad') }}" class="btn btn-primary">
+				Créer une nouvelle annonce
+			</a>
+
+			<div class="d-flex justify-content-center flex-wrap">
+				{% for article in articles %}
+					<div class="card border-primary mb-3" style="max-width: 20rem;">
+						<div class="card-header">annonce n°{{ article.id }}</div>
+						<div class="card-body">
+							<h4 class="card-title">
+								<a href="{{ path('app_ad.show', {'id': article.id}) }}">{{ article.title }}</a>
+							</h4>
+							<p class="card-text">{{ article.description|slice(0, 100) ~ '...' }}</p>
+							<p class="card-text">{{ article.price }} €</p>
+						</div>
+						<a href="{{ path('app_ad.edit', { id: article.id }) }}" class="btn btn-info" style="border-radius: 0;">Modifier</a>
+						<a href="{{ path('app_ad.delete', { id: article.id }) }}" class="btn btn-warning" style="border-radius: 0;">Supprimer</a>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<h4>Il n'y a pas de recettes</h4>
+		{% endif %}
+	</div>
 {% endblock %}

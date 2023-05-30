@@ -52,4 +52,53 @@ class ArticleController extends AbstractController
             'form'=>$form->createView()
         ]);    
     }
+
+    #[Route('/annonce/{id}', name:"app_ad.show")]
+    public function show(Article $article): Response
+    {
+        return $this->render('pages/article/show.html.twig',[
+            'article'=>$article
+        ]);
+
+    }
+
+    #[Route('/annonce/modifier-ma-annonce/{id}', name:'app_ad.edit', methods: ['GET','POST'])]
+    public function ad_edit(Article $article,
+    Request $request,
+    EntityManagerInterface $manager): Response
+    {
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            $article = $form->getData();
+            $manager->persist($article);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre annonce a été modifier avec succès!'
+            );
+
+            return $this->redirectToRoute('app_ad');
+        }
+
+        return $this->render('pages/article/edit.html.twig',[
+            'form'=>$form->createView()
+        ]);
+    }
+
+    #[Route('/annonce/suppression/{id}' , name:'app_ad.delete', methods:['GET'])]
+    public function delete(EntityManagerInterface $manager,
+    Article $article): Response
+    {
+        $manager->remove($article);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'Votre annonce a été supprimer avec succès!'
+        );
+
+        return $this->redirectToRoute('app_ad');
+    } 
 }
