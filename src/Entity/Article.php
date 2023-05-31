@@ -3,9 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @ORM\Entity
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
@@ -42,10 +49,14 @@ class Article
     #[ORM\Column]
     private ?int $postCode = null;
 
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleImage::class,  cascade: ['persist'], orphanRemoval: true)]
+    private Collection $images;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,6 +169,36 @@ class Article
     public function setPostCode(int $postCode): self
     {
         $this->postCode = $postCode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ArticleImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(ArticleImage $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ArticleImage $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getArticle() === $this) {
+                $image->setArticle(null);
+            }
+        }
 
         return $this;
     }

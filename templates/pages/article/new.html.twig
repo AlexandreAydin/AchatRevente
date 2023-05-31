@@ -57,6 +57,49 @@
 			</div>
 		</div>
 
+		<div class="form-group" style="margin-bottom:10px;">
+			<h2>Ajouter des images</h2>
+			{{ form_label(form.images) }}
+			{{ form_widget(form.images, {'attr': {'class': 'image-collection', 'data-index': form.images|length}}) }}
+			<div class="form-error">
+				{{ form_errors(form.images) }}
+			</div>
+		</div>
+
 		{{ form_end(form) }}
 	</div>
+
+
+
+	<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    var addButton = document.createElement('button');
+    addButton.innerHTML = 'Ajouter une image';
+    addButton.type = 'button';
+    addButton.classList.add('btn', 'btn-primary', 'mt-2');
+
+    addButton.addEventListener('click', function() {
+        var collectionHolder = document.getElementsByClassName('image-collection')[0];
+        var prototype = collectionHolder.getAttribute('data-prototype');
+        if (prototype !== null) {
+            var index = collectionHolder.dataset.index;
+            if (index < 6) {
+                var newForm = prototype.replace(/__name__/g, index);
+                collectionHolder.dataset.index = parseInt(index) + 1;
+                collectionHolder.insertAdjacentHTML('beforeend', newForm);
+
+                if (collectionHolder.dataset.index >= 6) {
+                    addButton.disabled = true;
+                }
+            }
+        }
+    });
+
+    var imageCollection = document.getElementsByClassName('image-collection')[0];
+    if (imageCollection !== undefined) {
+        imageCollection.insertAdjacentElement('afterend', addButton);
+    }
+});
+
+</script>
 {% endblock %}
