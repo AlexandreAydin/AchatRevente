@@ -1,64 +1,65 @@
 {% extends "base.html.twig" %}
 
-
-
-    {% block title %}
-	AcahtRevente
+{% block title %}
+	AchatRevente
 	{{ article.title }}
-
-
 {% endblock %}
 
-
 {% block body %}  
-    <div class="container">
-
-		<h1 class="mt-4">{{ article.title }}</h1>
-
-		<div> 
-			<span class="badge bg-primary">Créée le
-				{{ article.createdAt|date('d/m/Y') }}</span>
-		</div>
-
-		<div class="col-6">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            {% for iteration in 1..article.images|length %}
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ iteration - 1 }}" {{ (loop.first ) ?'class="active" aria-current="true"' : '' }} aria-label="Slide {{ iteration }}"></button>
-            {% endfor %}
-        </div>
-        <div class="carousel-inner">
-            {% for image in article.images %}
-                <div class="carousel-item {{ (loop.first ) ? 'active' : '' }}">
-                    <img src="{{ asset('uploads/articles/' ~ image.name) }}" class="d-block w-100" alt="{{ article.title }}">
-                </div>
-            {% endfor %}
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+<div class="container">
+    <h1 class="mt-4">{{ article.title }}</h1>
+    <div> 
+        <span class="badge bg-primary">Créée le {{ article.createdAt|date('d/m/Y') }}</span>
     </div>
+
+    <!-- Include Fancybox CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+    <div>
+        {% if article.images|length > 3 %}
+        <div class="text-end">
+            <button id="showMoreImages" class="btn btn-primary">Voir plus d'images</button>
+        </div>
+        {% endif %}
+        
+        <div class="image-gallery">
+            {% for image in article.images|slice(0, 3) %}
+                <a href="{{ asset('uploads/articles/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/articles/' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
+            {% endfor %}
+            
+            <div id="moreImages" style="display: none;">
+                {% for image in article.images|slice(3) %}
+                    <a href="{{ asset('uploads/articles/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/articles/' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <div class="mt-4">
+        {% if article.price %}
+            <p>prix : {{ article.price }} €</p>
+        {% else %}
+            <p>Prix non renseigné</p>
+        {% endif %}
+    </div>
+
+    <div class="mt-4">
+        {{ article.description|raw }}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var showMoreImagesButton = $('#showMoreImages');
+            
+            showMoreImagesButton.click(function() {
+                $('#moreImages').find('a').fancybox();
+                showMoreImagesButton.hide();
+            });
+        });
+    </script>
 </div>
-
-
-		<div class="mt-4">
-			{% if article.price %}
-				<p>prix : {{ article.price }} €</p>
-			{% else %}
-				<p>Prix non renseigné</p>
-			{% endif %}
-		</div>
-
-		<div class="mt-4">
-			{{ article.description|raw }}
-		</div>
-
-
-	</div>
-
 {% endblock %}

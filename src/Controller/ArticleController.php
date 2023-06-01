@@ -62,7 +62,7 @@ public function new_add(
             $img->setName($imageName);
 
             // Redimensionner l'image à 300x300 pixels
-            $resizedImageName = $pictureService->add($image, 300, 300);
+            $resizedImageName = $pictureService->add($image, 600, 400);
             $img->setName($resizedImageName);
 
             $article->addImage($img);
