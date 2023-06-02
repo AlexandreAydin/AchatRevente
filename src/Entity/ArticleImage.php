@@ -2,63 +2,28 @@
 
 namespace App\Entity;
 
-
+use App\Repository\ArticleImageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ArticleImageRepository::class)]
-#[Vich\Uploadable]
 class ArticleImage
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private $id;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $name;
 
-    #[Vich\UploadableField (mapping: 'acticles', fileNameProperty: 'name', size: 'size')]
-    private ?File $imageFile = null;
-  
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column]
-    private ?int $size = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\ManyToOne(inversedBy: 'articleImages')]
+    #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Article $article = null;
-
-
-    public function __toString(): string
-    {
-        return $this->name ?? '';
-    }
-
+    private $article;
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    public function setImageFile(?File $imageFile = null): void
-    {
-        $this->imageFile = $imageFile;
-
-        if (null !== $imageFile) {
-            $this->updatedAt = new \DateTimeImmutable();
-        }
-    }
- 
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
 
     public function getName(): ?string
     {
@@ -68,30 +33,6 @@ class ArticleImage
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getSize(): ?int
-    {
-        return $this->size;
-    }
-
-    public function setSize(int $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -57,6 +57,16 @@
 			</div>
 		</div>
 
+		 {% if app.request.attributes.get('_route') == 'app_ad.edit' %}
+        <h2>Images</h2>
+        {% for image in article.images %}
+            <div>
+				<img src="{{ asset('uploads/images300/' ~ image.name) }}" alt="{{image.name}}" class="mt-4" width="150">
+                 <a href="{{ path('app_ad.delete_image', {id: image.id}) }}">Supprimer</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+
 		{{ form_end(form) }}
 	</div>
 {% endblock %}

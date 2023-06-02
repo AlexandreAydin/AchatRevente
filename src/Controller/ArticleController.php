@@ -50,7 +50,6 @@ public function new_add(
                 continue;
             }
 
-            $folder = 'article';
             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
 
             // Add a check here to make sure $imageName is not an empty string
@@ -62,7 +61,7 @@ public function new_add(
             $img->setName($imageName);
 
             // Redimensionner l'image à 300x300 pixels
-            $resizedImageName = $pictureService->add($image, 600, 400);
+            $resizedImageName = $pictureService->add($image, 300, 300);
             $img->setName($resizedImageName);
 
             $article->addImage($img);
@@ -107,11 +106,10 @@ public function new_add(
         if ($form->isSubmitted() && $form->isValid()){
             $images = $form->get('images')->getData();
             foreach($images as $image){
-                // On définit le dossier de destination
-                $folder = 'articles';
+                
             
                 // On appelle le service d'ajout
-                $fichier = $pictureService->add($image, $folder, 300, 300);
+                $fichier = $pictureService->add($image, 300, 300);
             
                 $img = new ArticleImage();
                 $img->setName($fichier);
@@ -159,7 +157,7 @@ public function new_add(
     #[Route('/annonce/suppression/image/{id}', name: 'app_ad.delete_image', methods: ['GET'])]
     public function delete_image(EntityManagerInterface $manager, int $id, UrlGeneratorInterface $urlGenerator): RedirectResponse
     {
-        $image = $manager->getRepository(ArticleImages::class)->find($id);
+        $image = $manager->getRepository(ArticleImage::class)->find($id);
     
         if (!$image) {
             throw $this->createNotFoundException('Image not found');

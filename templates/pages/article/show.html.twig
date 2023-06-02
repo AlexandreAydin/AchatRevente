@@ -9,35 +9,28 @@
 <div class="container">
     <h1 class="mt-4">{{ article.title }}</h1>
     <div> 
-        <span class="badge bg-primary">Créée le {{ article.createdAt|date('d/m/Y') }}</span>
+        <span class="badge bg-primary mb-4">Créée le {{ article.createdAt|date('d/m/Y') }}</span>
     </div>
 
     <!-- Include Fancybox CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
 
-    <div>
-        {% if article.images|length > 3 %}
-        <div class="text-end">
-            <button id="showMoreImages" class="btn btn-primary">Voir plus d'images</button>
-        </div>
-        {% endif %}
-        
+    <div> 
         <div class="image-gallery">
             {% for image in article.images|slice(0, 3) %}
-                <a href="{{ asset('uploads/articles/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/articles/' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
+                <a href="{{ asset('uploads/images300/' ~ image.name) }}" data-fancybox="gallery"><img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
             {% endfor %}
             
             <div id="moreImages" style="display: none;">
                 {% for image in article.images|slice(3) %}
-                    <a href="{{ asset('uploads/articles/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/articles/' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
+                    <a href="{{ asset('uploads/images300/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
                 {% endfor %}
             </div>
         </div>
     </div>
 
-    <div style="clear: both;"></div>
 
-    <div class="mt-4">
+    <div class="mt-4 ">
         {% if article.price %}
             <p>prix : {{ article.price }} €</p>
         {% else %}
