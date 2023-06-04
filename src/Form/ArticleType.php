@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Article;
 use App\Entity\ArticleImage;
+use App\Entity\Categorie;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -78,6 +80,11 @@ class ArticleType extends AbstractType
                         ])
                     )
                 ]
+            ])
+            ->add('categorie', EntityType::class, [
+                'class' => Categorie::class,
+                'label' => 'Catégorie',
+                'placeholder' => 'Sélectionnez une catégorie',
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

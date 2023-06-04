@@ -37,6 +37,7 @@ class ArticleCrudController extends AbstractCrudController
             TextEditorField::new('description'),
             MoneyField::new('price')->setCurrency('EUR'),
             BooleanField::new('isPublic'),
+            AssociationField::new('categorie'),
             DateTimeField::new('createdAt')
                 ->hideOnForm(),
         ];
@@ -46,8 +47,7 @@ class ArticleCrudController extends AbstractCrudController
         SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters
     ): QueryBuilder {
         $qb = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
-
-        // Filter out deleted articles
+        
         $qb->andWhere('entity.isDeleted = :isDeleted');
         $qb->setParameter('isDeleted', false);
 
