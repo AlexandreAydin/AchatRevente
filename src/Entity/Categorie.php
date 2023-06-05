@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[ORM\Table(name:"categories")]
 class Categorie
 {
     #[ORM\Id]
@@ -21,6 +22,9 @@ class Categorie
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Article::class)]
     private Collection $article;
 
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Vehicle::class, orphanRemoval:true)]
+    private Collection $vehicles;
+
     public function __toString()
     {
         return $this->getName();
@@ -29,6 +33,7 @@ class Categorie
     public function __construct()
     {
         $this->article = new ArrayCollection();
+        $this->vehicles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -72,6 +77,36 @@ class Categorie
             // set the owning side to null (unless already changed)
             if ($article->getCategorie() === $this) {
                 $article->setCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Vehicle>
+     */
+    public function getVehicles(): Collection
+    {
+        return $this->vehicles;
+    }
+
+    public function addVehicle(Vehicle $vehicle): self
+    {
+        if (!$this->vehicles->contains($vehicle)) {
+            $this->vehicles->add($vehicle);
+            $vehicle->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVehicle(Vehicle $vehicle): self
+    {
+        if ($this->vehicles->removeElement($vehicle)) {
+            // set the owning side to null (unless already changed)
+            if ($vehicle->getCategorie() === $this) {
+                $vehicle->setCategorie(null);
             }
         }
 
