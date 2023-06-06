@@ -5,12 +5,12 @@ namespace App\Form;
 use App\Entity\Article;
 use App\Entity\Categorie;
 use App\Entity\Vehicle;
-use App\Repository\CategorieRepository;
 use App\Repository\VehicleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,9 +28,10 @@ class ArticleType extends AbstractType
 {
     private $vehicleRepository;
 
-    public function __construct(VehicleRepository $vehicleRepository)
+    public function __construct(VehicleRepository $vehicleRepository,)
     {
         $this->vehicleRepository = $vehicleRepository;
+
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -96,32 +97,52 @@ class ArticleType extends AbstractType
                 ]
             ])
             ->add('categorie', EntityType::class, [
+                'mapped' => false,
                 'class' => Categorie::class,
                 'choice_label' => 'name',
+                'placeholder' => 'Catégorie',
                 'label' => 'Catégorie',
-                'placeholder' => 'Sélectionnez une catégorie',
-                'query_builder' => fn (CategorieRepository $categorieRepository)
-                 => $categorieRepository->createQueryBuilder('c')->orderBy('c.name', 'ASC')
-
-                
+                'required' => false,
+                // 'query_builder' => fn (CategorieRepository $categorieRepository)
+                //  => $categorieRepository->createQueryBuilder('c')->orderBy('c.name', 'ASC')           
             ])
-            ->add('vehicle', EntityType::class, [
-                'mapped' => false,
-                'class' => Vehicle::class,
+            ->add('vehicle', ChoiceType::class, [
+                'choices' => $this->vehicleRepository->findAll(),
                 'choice_label' => 'name',
-                'label' => 'Catégorie',
-                'disabled'=> true,
                 'placeholder' => 'Sélectionnez type de votre véhicule',
-                'query_builder' => fn (VehicleRepository $vehicleRepository)
-                 => $vehicleRepository->createQueryBuilder('c')->orderBy('c.name', 'ASC')
+                'required' => false,
+                'label' => 'Véhicule'
             ])
+          
             ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary mt-4'
                 ],
                 'label' => 'Publier votre annonce',
             ]);         
-            
+
+
+            $formModifier = function (FormInterface $form, Categorie $categorie = null) {
+                $vehicle = null === $categorie ? [] : $categorie->getVehicles();
+    
+                $form->add('vehicle', EntityType::class, [
+                    'class' => Vehicle::class,
+                    'choices' => $vehicle,
+                    'required' => false,
+                    'choice_label' => 'name',
+                    'placeholder' => 'Choisir le véhicule',
+                    'attr' => ['class' => 'custom-select'],
+                    'label' => 'Véhicule'
+                ]);
+            };
+    
+            $builder->get('categorie')->addEventListener(
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) use ($formModifier) {
+                    $categorie = $event->getForm()->getData();
+                    $formModifier($event->getForm()->getParent(), $categorie);
+                }
+            );        
     }
 
 

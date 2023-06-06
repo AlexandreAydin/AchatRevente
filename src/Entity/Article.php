@@ -51,8 +51,9 @@ class Article
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleImage::class,  cascade: ['persist'], orphanRemoval: true)]
     private Collection $images;
 
-    #[ORM\ManyToOne(inversedBy: 'artile')]
-    private ?Categorie $categorie = null;
+    #[ORM\ManyToOne(inversedBy: 'article')]
+    #[ORM\JoinColumn(nullable:true)]
+    private ?Vehicle $vehicle = null;
 
 
     public function __construct()
@@ -218,15 +219,17 @@ class Article
         return $this;
     }
 
-    public function getCategorie(): ?Categorie
+    public function getVehicle(): ?Vehicle
     {
-        return $this->categorie;
+        return $this->vehicle;
     }
 
-    public function setCategorie(?Categorie $categorie): self
+    public function setVehicle(?Vehicle $vehicle): self
     {
-        $this->categorie = $categorie;
+        $this->vehicle = $vehicle;
 
         return $this;
     }
+
+
 }
