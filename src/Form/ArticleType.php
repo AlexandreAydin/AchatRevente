@@ -4,7 +4,9 @@ namespace App\Form;
 
 use App\Entity\Article;
 use App\Entity\Categorie;
+use App\Entity\MakeCar;
 use App\Entity\Vehicle;
+use App\Repository\MakeCarRepository;
 use App\Repository\VehicleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
@@ -27,10 +29,12 @@ use Symfony\Component\Validator\Constraints\All;
 class ArticleType extends AbstractType
 {
     private $vehicleRepository;
+    private $makeCarRepository;
 
-    public function __construct(VehicleRepository $vehicleRepository,)
+    public function __construct(VehicleRepository $vehicleRepository,MakeCarRepository $makeCarRepository)
     {
         $this->vehicleRepository = $vehicleRepository;
+        $this->makeCarRepository = $makeCarRepository;
 
     }
 
@@ -106,12 +110,21 @@ class ArticleType extends AbstractType
                 // 'query_builder' => fn (CategorieRepository $categorieRepository)
                 //  => $categorieRepository->createQueryBuilder('c')->orderBy('c.name', 'ASC')           
             ])
-            ->add('vehicle', ChoiceType::class, [
-                'choices' => $this->vehicleRepository->findAll(),
+            ->add('vehicle', EntityType::class, [
+                'class' => Vehicle::class,
+                // 'choices' => $this->vehicleRepository->findAll(),
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez type de votre véhicule',
                 'required' => false,
                 'label' => 'Véhicule'
+            ])
+            ->add('makeCar', EntityType::class, [
+                'class' => MakeCar::class,
+                // 'choices' => $this->makeCarRepository->findAll(),
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez la marque de votre véhicule',
+                'required' => false,
+                'label' => 'Marque'
             ])
           
             ->add('submit', SubmitType::class, [
@@ -122,12 +135,12 @@ class ArticleType extends AbstractType
             ]);         
 
 
-            $formModifier = function (FormInterface $form, Categorie $categorie = null) {
-                $vehicle = null === $categorie ? [] : $categorie->getVehicles();
-    
+            $formModifierCategorie = function (FormInterface $form, Categorie $categorie = null) {
+                $vehicleChoices = $categorie ? $categorie->getVehicles() : [];
+            
                 $form->add('vehicle', EntityType::class, [
                     'class' => Vehicle::class,
-                    'choices' => $vehicle,
+                    'choices' => $vehicleChoices,
                     'required' => false,
                     'choice_label' => 'name',
                     'placeholder' => 'Choisir le véhicule',
@@ -135,15 +148,38 @@ class ArticleType extends AbstractType
                     'label' => 'Véhicule'
                 ]);
             };
-    
+            
+            $formModifierVehicle = function (FormInterface $form, Vehicle $vehicle = null) {
+                $makeCar = null === $vehicle ? [] : $vehicle->getMakeCars();
+            
+                $form->add('makeCar', EntityType::class, [
+                    'class' => MakeCar::class,
+                    'choices' => $makeCar,
+                    'required' => false,
+                    'choice_label' => 'name',
+                    'placeholder' => 'Choisir la marque du véhicule',
+                    'attr' => ['class' => 'custom-select'],
+                    'label' => 'Véhicule'
+                ]);
+            };
+            
             $builder->get('categorie')->addEventListener(
                 FormEvents::POST_SUBMIT,
-                function (FormEvent $event) use ($formModifier) {
+                function (FormEvent $event) use ($formModifierCategorie) {
                     $categorie = $event->getForm()->getData();
-                    $formModifier($event->getForm()->getParent(), $categorie);
+                    $formModifierCategorie($event->getForm()->getParent(), $categorie);
                 }
-            );        
-    }
+            );
+            
+            $builder->get('vehicle')->addEventListener(
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) use ($formModifierVehicle) {
+                    $vehicle = $event->getForm()->getData();
+                    $formModifierVehicle($event->getForm()->getParent(), $vehicle);
+                }
+            );
+                  
+        }
 
 
     public function configureOptions(OptionsResolver $resolver): void

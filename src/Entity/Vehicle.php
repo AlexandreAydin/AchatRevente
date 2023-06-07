@@ -25,6 +25,8 @@ class Vehicle
     #[ORM\OneToMany(mappedBy: 'vehicle', targetEntity: Article::class)]
     private Collection $article;
 
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: MakeCar::class, orphanRemoval:true, cascade:["persist"])]
+    private Collection $makeCars;
 
     public function __toString()
     {
@@ -34,6 +36,7 @@ class Vehicle
     public function __construct()
     {
         $this->article = new ArrayCollection();
+        $this->makeCars = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -89,6 +92,36 @@ class Vehicle
             // set the owning side to null (unless already changed)
             if ($article->getVehicle() === $this) {
                 $article->setVehicle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MakeCar>
+     */
+    public function getMakeCars(): Collection
+    {
+        return $this->makeCars;
+    }
+
+    public function addMakeCar(MakeCar $makeCar): self
+    {
+        if (!$this->makeCars->contains($makeCar)) {
+            $this->makeCars->add($makeCar);
+            $makeCar->setVehicle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMakeCar(MakeCar $makeCar): self
+    {
+        if ($this->makeCars->removeElement($makeCar)) {
+            // set the owning side to null (unless already changed)
+            if ($makeCar->getVehicle() === $this) {
+                $makeCar->setVehicle(null);
             }
         }
 

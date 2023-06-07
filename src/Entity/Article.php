@@ -55,6 +55,10 @@ class Article
     #[ORM\JoinColumn(nullable:true)]
     private ?Vehicle $vehicle = null;
 
+    #[ORM\ManyToOne(inversedBy: 'article')]
+    #[ORM\JoinColumn(nullable:true)]
+    private ?MakeCar $makeCar = null;
+
 
     public function __construct()
     {
@@ -227,6 +231,18 @@ class Article
     public function setVehicle(?Vehicle $vehicle): self
     {
         $this->vehicle = $vehicle;
+
+        return $this;
+    }
+
+    public function getMakeCar(): ?MakeCar
+    {
+        return $this->makeCar;
+    }
+
+    public function setMakeCar(?MakeCar $makeCar): self
+    {
+        $this->makeCar = $makeCar;
 
         return $this;
     }
