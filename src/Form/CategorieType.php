@@ -15,14 +15,6 @@ class CategorieType extends AbstractType
     {
         $builder
             ->add('name')
-            // ->add('vehicles', CollectionType::class, [
-            //     'entry_type' => VehicleType::class,
-            //     'label' => 'Véhicule',
-            //     'entry_options' => ['label' => false],
-            //     'allow_add' => true,
-            //     'allow_delete' => true,
-            //     'by_reference' => false
-            // ])
     
         ;
     }

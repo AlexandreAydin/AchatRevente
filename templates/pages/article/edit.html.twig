@@ -69,4 +69,62 @@
 
 		{{ form_end(form) }}
 	</div>
+
+	<script>
+	
+	window.onload = () => {
+    let categorieSelect = document.querySelector("#article_categorie");
+    let vehicleSelect = document.querySelector("#article_vehicle");
+    let makeCarSelect = document.querySelector("#article_makeCar");
+    let modelCarSelect = document.querySelector("#article_modelCar");
+
+    const appendOptions = (data, selectElement, placeholderName) => {
+        // Clear current options
+        selectElement.innerHTML = "";
+
+        // Add placeholder option
+        let optPlaceholder = document.createElement('option');
+        optPlaceholder.value = "";
+        optPlaceholder.innerHTML = `Choisir ${placeholderName}...`;
+        selectElement.appendChild(optPlaceholder);
+
+        // Add new options
+        data.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item.id;
+            opt.innerHTML = item.name;
+            selectElement.appendChild(opt);
+        });
+    };
+
+    const handleError = (error) => {
+        console.error("An error occurred:", error);
+    };
+
+    categorieSelect.addEventListener("change", function() {
+        let selectedOption = this.options[this.selectedIndex].text;
+        fetch(`/get-vehicles/${this.value}`)
+            .then(response => response.json())
+            .then(data => appendOptions(data, vehicleSelect, selectedOption))
+            .catch(handleError);
+    });
+
+    vehicleSelect.addEventListener("change", function() {
+        let selectedOption = this.options[this.selectedIndex].text;
+        fetch(`/get-make-cars/${this.value}`)
+            .then(response => response.json())
+            .then(data => appendOptions(data, makeCarSelect, selectedOption))
+            .catch(handleError);
+    });
+
+	makeCarSelect.addEventListener("change", function() {
+    let selectedOption = this.options[this.selectedIndex].text;
+    fetch(`/get-model-cars/${this.value}`)
+        .then(response => response.json())
+        .then(data => appendOptions(data, modelCarSelect, selectedOption))
+        .catch(handleError);
+});
+	
+}
+	</script>
 {% endblock %}

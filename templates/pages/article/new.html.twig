@@ -79,6 +79,7 @@ window.onload = () => {
     let categorieSelect = document.querySelector("#article_categorie");
     let vehicleSelect = document.querySelector("#article_vehicle");
     let makeCarSelect = document.querySelector("#article_makeCar");
+    let modelCarSelect = document.querySelector("#article_modelCar");
 
     const appendOptions = (data, selectElement, placeholderName) => {
         // Clear current options
@@ -118,6 +119,15 @@ window.onload = () => {
             .then(data => appendOptions(data, makeCarSelect, selectedOption))
             .catch(handleError);
     });
+
+	makeCarSelect.addEventListener("change", function() {
+    let selectedOption = this.options[this.selectedIndex].text;
+    fetch(`/get-model-cars/${this.value}`)
+        .then(response => response.json())
+        .then(data => appendOptions(data, modelCarSelect, selectedOption))
+        .catch(handleError);
+});
+	
 }
 
 

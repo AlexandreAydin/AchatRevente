@@ -95,7 +95,7 @@ public function new_add(
 
     }
 
-    #[Route('/annonce/modifier-ma-annonce/{id}', name:'app_ad.edit', methods: ['GET','POST'])]
+    #[Route('/annonce/modifier-mon-annonce/{id}', name:'app_ad.edit', methods: ['GET','POST'])]
     public function ad_edit(Article $article,
     Request $request,
     EntityManagerInterface $manager,

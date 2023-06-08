@@ -24,9 +24,13 @@ class MakeCar
     #[ORM\OneToMany(mappedBy: 'makeCar', targetEntity: Article::class)]
     private Collection $article;
 
+    #[ORM\OneToMany(mappedBy: 'makeCar', targetEntity: ModelCar::class)]
+    private Collection $modelCars;
+
     public function __construct()
     {
         $this->article = new ArrayCollection();
+        $this->modelCars = new ArrayCollection();
     }
 
     public function __toString()
@@ -87,6 +91,36 @@ class MakeCar
             // set the owning side to null (unless already changed)
             if ($article->getMakeCar() === $this) {
                 $article->setMakeCar(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ModelCar>
+     */
+    public function getModelCars(): Collection
+    {
+        return $this->modelCars;
+    }
+
+    public function addModelCar(ModelCar $modelCar): self
+    {
+        if (!$this->modelCars->contains($modelCar)) {
+            $this->modelCars->add($modelCar);
+            $modelCar->setMakeCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModelCar(ModelCar $modelCar): self
+    {
+        if ($this->modelCars->removeElement($modelCar)) {
+            // set the owning side to null (unless already changed)
+            if ($modelCar->getMakeCar() === $this) {
+                $modelCar->setMakeCar(null);
             }
         }
 

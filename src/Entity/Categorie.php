@@ -22,6 +22,9 @@ class Categorie
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Vehicle::class, orphanRemoval:true, cascade:["persist"])]
     private Collection $vehicles;
 
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Article::class)]
+    private Collection $articles;
+
     public function __toString()
     {
         return $this->getName();
@@ -30,6 +33,7 @@ class Categorie
     public function __construct()
     {
         $this->vehicles = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,6 +77,36 @@ class Categorie
             // set the owning side to null (unless already changed)
             if ($vehicle->getCategorie() === $this) {
                 $vehicle->setCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): self
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): self
+    {
+        if ($this->articles->removeElement($article)) {
+            // set the owning side to null (unless already changed)
+            if ($article->getCategorie() === $this) {
+                $article->setCategorie(null);
             }
         }
 

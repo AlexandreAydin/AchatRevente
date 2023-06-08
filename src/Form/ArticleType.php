@@ -5,8 +5,11 @@ namespace App\Form;
 use App\Entity\Article;
 use App\Entity\Categorie;
 use App\Entity\MakeCar;
+use App\Entity\ModelCar;
 use App\Entity\Vehicle;
+use App\Repository\CategorieRepository;
 use App\Repository\MakeCarRepository;
+use App\Repository\ModelCarRepository;
 use App\Repository\VehicleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
@@ -28,19 +31,50 @@ use Symfony\Component\Validator\Constraints\All;
 
 class ArticleType extends AbstractType
 {
+    private $categorieRepository;
     private $vehicleRepository;
     private $makeCarRepository;
+    private  $modelCarRepository;
 
-    public function __construct(VehicleRepository $vehicleRepository,MakeCarRepository $makeCarRepository)
+    public function __construct(CategorieRepository $categorieRepository,
+    VehicleRepository $vehicleRepository,
+    MakeCarRepository $makeCarRepository,
+    ModelCarRepository $modelCarRepository,)
     {
+        $this->categorieRepository = $categorieRepository;
         $this->vehicleRepository = $vehicleRepository;
         $this->makeCarRepository = $makeCarRepository;
+        $this->modelCarRepository = $modelCarRepository;
 
     }
 
+
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        
+        $categories = $this->categorieRepository->findAll();
+        $vehicles = $this->vehicleRepository->findAll();
+        $makeCars = $this->makeCarRepository->findAll();
+        $modelCars = $this->modelCarRepository->findAll();
+    
+        $categorieChoices = [];
+        $vehicleChoices = [];
+        $makeCarChoices = [];
+        $modelCarChoices = [];
+    
+        foreach ($categories as $categorie) {
+            $categorieChoices[$categorie->getId()] = $categorie;
+        }
+        foreach ($vehicles as $vehicle) {
+            $vehicleChoices[$vehicle->getId()] = $vehicle;
+        }
+        foreach ($makeCars as $makeCar) {
+            $makeCarChoices[$makeCar->getId()] = $makeCar;
+        }
+        foreach ($modelCars as $modelCar) {
+            $modelCarChoices[$modelCar->getId()] = $modelCar;
+        }
+    
         $builder
             ->add('title', TextType::class,[
                 'attr'=>['form-control'],
@@ -100,27 +134,41 @@ class ArticleType extends AbstractType
                     )
                 ]
             ])
-            ->add('categorie', EntityType::class, [
-                'mapped' => false,
-                'class' => Categorie::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Catégorie',
-                'label' => 'Catégorie',
-                'required' => false,
-                // 'query_builder' => fn (CategorieRepository $categorieRepository)
-                //  => $categorieRepository->createQueryBuilder('c')->orderBy('c.name', 'ASC')           
-            ])
-            ->add('vehicle', EntityType::class, [
-                'class' => Vehicle::class,
-                // 'choices' => $this->vehicleRepository->findAll(),
+            ->add('categorie', ChoiceType::class, [
+                'choices' => $categorieChoices,
+                'choice_value' => function (?Categorie $entity) {
+                    return $entity ? $entity->getId() : '';
+                },
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez type de votre véhicule',
                 'required' => false,
                 'label' => 'Véhicule'
             ])
-            ->add('makeCar', EntityType::class, [
-                'class' => MakeCar::class,
-                // 'choices' => $this->makeCarRepository->findAll(),
+            ->add('vehicle', ChoiceType::class, [
+                'choices' => $vehicleChoices,
+                'choice_value' => function (?Vehicle $entity) {
+                    return $entity ? $entity->getId() : '';
+                },
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez type de votre véhicule',
+                'required' => false,
+                'label' => 'Véhicule'
+            ])
+            ->add('makeCar', ChoiceType::class, [
+                'choices' => $makeCarChoices,
+                'choice_value' => function (?MakeCar $entity) {
+                    return $entity ? $entity->getId() : '';
+                },
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez la marque de votre véhicule',
+                'required' => false,
+                'label' => 'Marque'
+            ])
+            ->add('modelCar', ChoiceType::class, [
+                'choices' => $modelCarChoices,
+                'choice_value' => function (?ModelCar $entity) {
+                    return $entity ? $entity->getId() : '';
+                },
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez la marque de votre véhicule',
                 'required' => false,
@@ -133,52 +181,6 @@ class ArticleType extends AbstractType
                 ],
                 'label' => 'Publier votre annonce',
             ]);         
-
-
-            $formModifierCategorie = function (FormInterface $form, Categorie $categorie = null) {
-                $vehicleChoices = $categorie ? $categorie->getVehicles() : [];
-            
-                $form->add('vehicle', EntityType::class, [
-                    'class' => Vehicle::class,
-                    'choices' => $vehicleChoices,
-                    'required' => false,
-                    'choice_label' => 'name',
-                    'placeholder' => 'Choisir le véhicule',
-                    'attr' => ['class' => 'custom-select'],
-                    'label' => 'Véhicule'
-                ]);
-            };
-            
-            $formModifierVehicle = function (FormInterface $form, Vehicle $vehicle = null) {
-                $makeCar = null === $vehicle ? [] : $vehicle->getMakeCars();
-            
-                $form->add('makeCar', EntityType::class, [
-                    'class' => MakeCar::class,
-                    'choices' => $makeCar,
-                    'required' => false,
-                    'choice_label' => 'name',
-                    'placeholder' => 'Choisir la marque du véhicule',
-                    'attr' => ['class' => 'custom-select'],
-                    'label' => 'Véhicule'
-                ]);
-            };
-            
-            $builder->get('categorie')->addEventListener(
-                FormEvents::POST_SUBMIT,
-                function (FormEvent $event) use ($formModifierCategorie) {
-                    $categorie = $event->getForm()->getData();
-                    $formModifierCategorie($event->getForm()->getParent(), $categorie);
-                }
-            );
-            
-            $builder->get('vehicle')->addEventListener(
-                FormEvents::POST_SUBMIT,
-                function (FormEvent $event) use ($formModifierVehicle) {
-                    $vehicle = $event->getForm()->getData();
-                    $formModifierVehicle($event->getForm()->getParent(), $vehicle);
-                }
-            );
-                  
         }
 
 
