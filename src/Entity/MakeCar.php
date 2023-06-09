@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Annonce\Article;
 use App\Repository\MakeCarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,14 +19,15 @@ class MakeCar
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity:Vehicle::class,inversedBy: 'makeCars')]
-    private ?Vehicle $vehicle = null;
 
     #[ORM\OneToMany(mappedBy: 'makeCar', targetEntity: Article::class)]
     private Collection $article;
 
     #[ORM\OneToMany(mappedBy: 'makeCar', targetEntity: ModelCar::class)]
     private Collection $modelCars;
+
+    #[ORM\ManyToOne(inversedBy: 'makeCars')]
+    private ?SubCategorie $subCategorie = null;
 
     public function __construct()
     {
@@ -55,17 +57,6 @@ class MakeCar
         return $this;
     }
 
-    public function getVehicle(): ?Vehicle
-    {
-        return $this->vehicle;
-    }
-
-    public function setVehicle(?Vehicle $vehicle): self
-    {
-        $this->vehicle = $vehicle;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Article>
@@ -123,6 +114,18 @@ class MakeCar
                 $modelCar->setMakeCar(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSubCategorie(): ?SubCategorie
+    {
+        return $this->subCategorie;
+    }
+
+    public function setSubCategorie(?SubCategorie $subCategorie): static
+    {
+        $this->subCategorie = $subCategorie;
 
         return $this;
     }

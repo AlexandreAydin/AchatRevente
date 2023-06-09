@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Annonce\Article;
 use App\Repository\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,11 +20,12 @@ class Categorie
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Vehicle::class, orphanRemoval:true, cascade:["persist"])]
-    private Collection $vehicles;
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Article::class)]
     private Collection $articles;
+
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: SubCategorie::class)]
+    private Collection $subCategories;
 
     public function __toString()
     {
@@ -32,8 +34,8 @@ class Categorie
 
     public function __construct()
     {
-        $this->vehicles = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->subCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -53,35 +55,6 @@ class Categorie
         return $this;
     }
 
-    /**
-     * @return Collection<int, Vehicle>
-     */
-    public function getVehicles(): Collection
-    {
-        return $this->vehicles;
-    }
-
-    public function addVehicle(Vehicle $vehicle): self
-    {
-        if (!$this->vehicles->contains($vehicle)) {
-            $this->vehicles->add($vehicle);
-            $vehicle->setCategorie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVehicle(Vehicle $vehicle): self
-    {
-        if ($this->vehicles->removeElement($vehicle)) {
-            // set the owning side to null (unless already changed)
-            if ($vehicle->getCategorie() === $this) {
-                $vehicle->setCategorie(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Article>
@@ -107,6 +80,36 @@ class Categorie
             // set the owning side to null (unless already changed)
             if ($article->getCategorie() === $this) {
                 $article->setCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SubCategorie>
+     */
+    public function getSubCategories(): Collection
+    {
+        return $this->subCategories;
+    }
+
+    public function addSubCategory(SubCategorie $subCategory): static
+    {
+        if (!$this->subCategories->contains($subCategory)) {
+            $this->subCategories->add($subCategory);
+            $subCategory->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubCategory(SubCategorie $subCategory): static
+    {
+        if ($this->subCategories->removeElement($subCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($subCategory->getCategorie() === $this) {
+                $subCategory->setCategorie(null);
             }
         }
 

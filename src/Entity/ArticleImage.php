@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Annonce\Article;
 use App\Repository\ArticleImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 

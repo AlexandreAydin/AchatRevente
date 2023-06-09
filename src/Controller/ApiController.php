@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Categorie;
 use App\Entity\MakeCar;
 use App\Entity\ModelCar;
-use App\Entity\Vehicle;
+use App\Entity\SubCategorie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,16 +21,16 @@ class ApiController extends AbstractController
     }
 
 
-    #[Route("/get-vehicles/{id}", name:"get_vehicles")]
-    public function getVehicles(Categorie $categorie): JsonResponse
+    #[Route("/get-subCategories/{id}", name:"get_subCategories")]
+    public function getsubCategories(Categorie $categorie): JsonResponse
     {
-        $vehicles = $this->entityManager->getRepository(Vehicle::class)->findBy(['categorie' => $categorie]);
+        $subCategories = $this->entityManager->getRepository(SubCategorie::class)->findBy(['categorie' => $categorie]);
 
         $responseArray = [];
-        foreach($vehicles as $vehicle){
+        foreach($subCategories as $subCategorie){
             $responseArray[] = [
-                'id' => $vehicle->getId(),
-                'name' => $vehicle->getName()
+                'id' => $subCategorie->getId(),
+                'name' => $subCategorie->getName()
             ];
         }
 
@@ -38,9 +38,9 @@ class ApiController extends AbstractController
     }
 
     #[Route("/get-make-cars/{id}", name:"get_make_cars")]
-    public function getMakeCars(Vehicle $vehicle): JsonResponse
+    public function getMakeCars(SubCategorie $subCategorie): JsonResponse
     {
-       $makeCars = $this->entityManager->getRepository(MakeCar::class)->findBy(['vehicle' => $vehicle]);
+       $makeCars = $this->entityManager->getRepository(MakeCar::class)->findBy(['subCategorie' => $subCategorie]);
 
         $responseArray = [];
         foreach($makeCars as $makeCar){

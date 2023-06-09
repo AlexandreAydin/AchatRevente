@@ -2,16 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\Article;
+use App\Entity\Annonce\Article;
 use App\Entity\Categorie;
 use App\Entity\MakeCar;
 use App\Entity\ModelCar;
-use App\Entity\Vehicle;
+use App\Entity\SubCategorie;
 use App\Repository\CategorieRepository;
 use App\Repository\MakeCarRepository;
 use App\Repository\ModelCarRepository;
-use App\Repository\VehicleRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Repository\SubCategorieRepository;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -32,17 +31,18 @@ use Symfony\Component\Validator\Constraints\All;
 class ArticleType extends AbstractType
 {
     private $categorieRepository;
-    private $vehicleRepository;
+    private $subCategorieRepository;
     private $makeCarRepository;
     private  $modelCarRepository;
 
-    public function __construct(CategorieRepository $categorieRepository,
-    VehicleRepository $vehicleRepository,
+    public function __construct(
+    CategorieRepository $categorieRepository,
+    SubCategorieRepository $subCategorieRepository,
     MakeCarRepository $makeCarRepository,
     ModelCarRepository $modelCarRepository,)
     {
         $this->categorieRepository = $categorieRepository;
-        $this->vehicleRepository = $vehicleRepository;
+        $this->subCategorieRepository = $subCategorieRepository;
         $this->makeCarRepository = $makeCarRepository;
         $this->modelCarRepository = $modelCarRepository;
 
@@ -53,20 +53,20 @@ class ArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $categories = $this->categorieRepository->findAll();
-        $vehicles = $this->vehicleRepository->findAll();
+        $subCategories = $this->subCategorieRepository->findAll();
         $makeCars = $this->makeCarRepository->findAll();
         $modelCars = $this->modelCarRepository->findAll();
     
         $categorieChoices = [];
-        $vehicleChoices = [];
+        $subCategorieChoices = [];
         $makeCarChoices = [];
         $modelCarChoices = [];
     
         foreach ($categories as $categorie) {
             $categorieChoices[$categorie->getId()] = $categorie;
         }
-        foreach ($vehicles as $vehicle) {
-            $vehicleChoices[$vehicle->getId()] = $vehicle;
+        foreach ($subCategories as $subCategorie) {
+            $subCategorieChoices[$subCategorie->getId()] = $subCategorie;
         }
         foreach ($makeCars as $makeCar) {
             $makeCarChoices[$makeCar->getId()] = $makeCar;
@@ -144,9 +144,9 @@ class ArticleType extends AbstractType
                 'required' => false,
                 'label' => 'Véhicule'
             ])
-            ->add('vehicle', ChoiceType::class, [
-                'choices' => $vehicleChoices,
-                'choice_value' => function (?Vehicle $entity) {
+            ->add('subCategorie', ChoiceType::class, [
+                'choices' => $subCategorieChoices,
+                'choice_value' => function (?SubCategorie $entity) {
                     return $entity ? $entity->getId() : '';
                 },
                 'choice_label' => 'name',

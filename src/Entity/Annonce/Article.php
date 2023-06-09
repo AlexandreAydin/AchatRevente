@@ -1,7 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Annonce;
 
+use App\Entity\ArticleImage;
+use App\Entity\Categorie;
+use App\Entity\MakeCar;
+use App\Entity\ModelCar;
+use App\Entity\SubCategorie;
+use App\Entity\User;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -53,10 +59,6 @@ class Article
 
     #[ORM\ManyToOne(inversedBy: 'article')]
     #[ORM\JoinColumn(nullable:true)]
-    private ?Vehicle $vehicle = null;
-
-    #[ORM\ManyToOne(inversedBy: 'article')]
-    #[ORM\JoinColumn(nullable:true)]
     private ?MakeCar $makeCar = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
@@ -64,6 +66,9 @@ class Article
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?ModelCar $modelCar = null;
+
+    #[ORM\ManyToOne(inversedBy: 'article')]
+    private ?SubCategorie $subCategorie = null;
 
 
     public function __construct()
@@ -229,18 +234,6 @@ class Article
         return $this;
     }
 
-    public function getVehicle(): ?Vehicle
-    {
-        return $this->vehicle;
-    }
-
-    public function setVehicle(?Vehicle $vehicle): self
-    {
-        $this->vehicle = $vehicle;
-
-        return $this;
-    }
-
     public function getMakeCar(): ?MakeCar
     {
         return $this->makeCar;
@@ -273,6 +266,18 @@ class Article
     public function setModelCar(?ModelCar $modelCar): self
     {
         $this->modelCar = $modelCar;
+
+        return $this;
+    }
+
+    public function getSubCategorie(): ?SubCategorie
+    {
+        return $this->subCategorie;
+    }
+
+    public function setSubCategorie(?SubCategorie $subCategorie): static
+    {
+        $this->subCategorie = $subCategorie;
 
         return $this;
     }

@@ -18,7 +18,6 @@ class CategorieCrudController extends AbstractCrudController
     {
         return [
             TextField::new('name'),
-            AssociationField::new('article')
         ];
     }
     

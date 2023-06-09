@@ -2,10 +2,8 @@
 
 namespace App\Form;
 
-
-use App\Entity\Vehicle;
+use App\Entity\SubCategorie;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,7 +20,7 @@ class CategorieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Vehicle::class,
+            'data_class' => SubCategorie::class,
         ]);
     }
 }

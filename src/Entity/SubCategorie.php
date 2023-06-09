@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\VehicleRepository;
+use App\Entity\Annonce\Article;
+use App\Repository\SubCategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: VehicleRepository::class)]
-#[ORM\Table(name:"vehicles")]
-class Vehicle
+#[ORM\Entity(repositoryClass: SubCategorieRepository::class)]
+class SubCategorie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,13 +19,13 @@ class Vehicle
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'vehicles')] 
+    #[ORM\ManyToOne(inversedBy: 'subCategories')]
     private ?Categorie $categorie = null;
 
-    #[ORM\OneToMany(mappedBy: 'vehicle', targetEntity: Article::class)]
+    #[ORM\OneToMany(mappedBy: 'subCategorie', targetEntity: Article::class)]
     private Collection $article;
 
-    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: MakeCar::class, orphanRemoval:true, cascade:["persist"])]
+    #[ORM\OneToMany(mappedBy: 'subCategorie', targetEntity: MakeCar::class)]
     private Collection $makeCars;
 
     public function __toString()
@@ -49,7 +49,7 @@ class Vehicle
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -61,7 +61,7 @@ class Vehicle
         return $this->categorie;
     }
 
-    public function setCategorie(?Categorie $categorie): self
+    public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
 
@@ -76,22 +76,22 @@ class Vehicle
         return $this->article;
     }
 
-    public function addArticle(Article $article): self
+    public function addArticle(Article $article): static
     {
         if (!$this->article->contains($article)) {
             $this->article->add($article);
-            $article->setVehicle($this);
+            $article->setSubCategorie($this);
         }
 
         return $this;
     }
 
-    public function removeArticle(Article $article): self
+    public function removeArticle(Article $article): static
     {
         if ($this->article->removeElement($article)) {
             // set the owning side to null (unless already changed)
-            if ($article->getVehicle() === $this) {
-                $article->setVehicle(null);
+            if ($article->getSubCategorie() === $this) {
+                $article->setSubCategorie(null);
             }
         }
 
@@ -106,26 +106,25 @@ class Vehicle
         return $this->makeCars;
     }
 
-    public function addMakeCar(MakeCar $makeCar): self
+    public function addMakeCar(MakeCar $makeCar): static
     {
         if (!$this->makeCars->contains($makeCar)) {
             $this->makeCars->add($makeCar);
-            $makeCar->setVehicle($this);
+            $makeCar->setSubCategorie($this);
         }
 
         return $this;
     }
 
-    public function removeMakeCar(MakeCar $makeCar): self
+    public function removeMakeCar(MakeCar $makeCar): static
     {
         if ($this->makeCars->removeElement($makeCar)) {
             // set the owning side to null (unless already changed)
-            if ($makeCar->getVehicle() === $this) {
-                $makeCar->setVehicle(null);
+            if ($makeCar->getSubCategorie() === $this) {
+                $makeCar->setSubCategorie(null);
             }
         }
 
         return $this;
     }
-
 }
