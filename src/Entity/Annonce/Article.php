@@ -8,13 +8,18 @@ use App\Entity\MakeCar;
 use App\Entity\ModelCar;
 use App\Entity\SubCategorie;
 use App\Entity\User;
-use App\Repository\ArticleRepository;
+use App\Repository\Annonce\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-
+/**
+ * @ORM\Entity()
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"vehicule" = "Vehicule", "multimedia" = "Multimedia"})
+ */
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
@@ -69,6 +74,9 @@ class Article
 
     #[ORM\ManyToOne(inversedBy: 'article')]
     private ?SubCategorie $subCategorie = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?Vehicle $vehicle = null;
 
 
     public function __construct()
@@ -278,6 +286,18 @@ class Article
     public function setSubCategorie(?SubCategorie $subCategorie): static
     {
         $this->subCategorie = $subCategorie;
+
+        return $this;
+    }
+
+    public function getVehicle(): ?Vehicle
+    {
+        return $this->vehicle;
+    }
+
+    public function setVehicle(?Vehicle $vehicle): static
+    {
+        $this->vehicle = $vehicle;
 
         return $this;
     }

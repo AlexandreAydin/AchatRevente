@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Annonce\Article;
+use App\Entity\Annonce\MultiMedia;
+use App\Entity\Annonce\Vehicle;
 use App\Repository\MakeCarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,10 +31,18 @@ class MakeCar
     #[ORM\ManyToOne(inversedBy: 'makeCars')]
     private ?SubCategorie $subCategorie = null;
 
+    #[ORM\OneToMany(mappedBy: 'makeCar', targetEntity: Vehicle::class)]
+    private Collection $vehicles;
+
+    #[ORM\OneToMany(mappedBy: 'makeCar', targetEntity: MultiMedia::class)]
+    private Collection $multiMedia;
+
     public function __construct()
     {
         $this->article = new ArrayCollection();
         $this->modelCars = new ArrayCollection();
+        $this->vehicles = new ArrayCollection();
+        $this->multiMedia = new ArrayCollection();
     }
 
     public function __toString()
@@ -126,6 +136,66 @@ class MakeCar
     public function setSubCategorie(?SubCategorie $subCategorie): static
     {
         $this->subCategorie = $subCategorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Vehicle>
+     */
+    public function getVehicles(): Collection
+    {
+        return $this->vehicles;
+    }
+
+    public function addVehicle(Vehicle $vehicle): static
+    {
+        if (!$this->vehicles->contains($vehicle)) {
+            $this->vehicles->add($vehicle);
+            $vehicle->setMakeCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVehicle(Vehicle $vehicle): static
+    {
+        if ($this->vehicles->removeElement($vehicle)) {
+            // set the owning side to null (unless already changed)
+            if ($vehicle->getMakeCar() === $this) {
+                $vehicle->setMakeCar(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MultiMedia>
+     */
+    public function getMultiMedia(): Collection
+    {
+        return $this->multiMedia;
+    }
+
+    public function addMultiMedium(MultiMedia $multiMedium): static
+    {
+        if (!$this->multiMedia->contains($multiMedium)) {
+            $this->multiMedia->add($multiMedium);
+            $multiMedium->setMakeCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMultiMedium(MultiMedia $multiMedium): static
+    {
+        if ($this->multiMedia->removeElement($multiMedium)) {
+            // set the owning side to null (unless already changed)
+            if ($multiMedium->getMakeCar() === $this) {
+                $multiMedium->setMakeCar(null);
+            }
+        }
 
         return $this;
     }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Annonce;
 
 use App\Entity\Annonce\Article;
+use App\Entity\Annonce\MultiMedia;
+use App\Entity\Annonce\Vehicle;
 use App\Entity\Categorie;
 use App\Entity\MakeCar;
 use App\Entity\ModelCar;
@@ -11,6 +13,7 @@ use App\Repository\CategorieRepository;
 use App\Repository\MakeCarRepository;
 use App\Repository\ModelCarRepository;
 use App\Repository\SubCategorieRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -23,7 +26,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
 
@@ -32,20 +34,14 @@ class ArticleType extends AbstractType
 {
     private $categorieRepository;
     private $subCategorieRepository;
-    private $makeCarRepository;
-    private  $modelCarRepository;
+
 
     public function __construct(
     CategorieRepository $categorieRepository,
-    SubCategorieRepository $subCategorieRepository,
-    MakeCarRepository $makeCarRepository,
-    ModelCarRepository $modelCarRepository,)
+    SubCategorieRepository $subCategorieRepository,)
     {
         $this->categorieRepository = $categorieRepository;
         $this->subCategorieRepository = $subCategorieRepository;
-        $this->makeCarRepository = $makeCarRepository;
-        $this->modelCarRepository = $modelCarRepository;
-
     }
 
 
@@ -54,25 +50,15 @@ class ArticleType extends AbstractType
     {
         $categories = $this->categorieRepository->findAll();
         $subCategories = $this->subCategorieRepository->findAll();
-        $makeCars = $this->makeCarRepository->findAll();
-        $modelCars = $this->modelCarRepository->findAll();
     
         $categorieChoices = [];
         $subCategorieChoices = [];
-        $makeCarChoices = [];
-        $modelCarChoices = [];
     
         foreach ($categories as $categorie) {
             $categorieChoices[$categorie->getId()] = $categorie;
         }
         foreach ($subCategories as $subCategorie) {
             $subCategorieChoices[$subCategorie->getId()] = $subCategorie;
-        }
-        foreach ($makeCars as $makeCar) {
-            $makeCarChoices[$makeCar->getId()] = $makeCar;
-        }
-        foreach ($modelCars as $modelCar) {
-            $modelCarChoices[$modelCar->getId()] = $modelCar;
         }
     
         $builder
@@ -134,16 +120,6 @@ class ArticleType extends AbstractType
                     )
                 ]
             ])
-            ->add('categorie', ChoiceType::class, [
-                'choices' => $categorieChoices,
-                'choice_value' => function (?Categorie $entity) {
-                    return $entity ? $entity->getId() : '';
-                },
-                'choice_label' => 'name',
-                'placeholder' => 'Sélectionnez type de votre véhicule',
-                'required' => false,
-                'label' => 'Véhicule'
-            ])
             ->add('subCategorie', ChoiceType::class, [
                 'choices' => $subCategorieChoices,
                 'choice_value' => function (?SubCategorie $entity) {
@@ -154,35 +130,25 @@ class ArticleType extends AbstractType
                 'required' => false,
                 'label' => 'Véhicule'
             ])
-            ->add('makeCar', ChoiceType::class, [
-                'choices' => $makeCarChoices,
-                'choice_value' => function (?MakeCar $entity) {
-                    return $entity ? $entity->getId() : '';
-                },
-                'choice_label' => 'name',
-                'placeholder' => 'Sélectionnez la marque de votre véhicule',
-                'required' => false,
-                'label' => 'Marque'
+            ->add('categorie', ChoiceType::class, [
+                'choices'  => [
+                    'Vehicule' => 'vehicule',
+                    'Multimedia' => 'multimedia',
+                ],
             ])
-            ->add('modelCar', ChoiceType::class, [
-                'choices' => $modelCarChoices,
-                'choice_value' => function (?ModelCar $entity) {
-                    return $entity ? $entity->getId() : '';
-                },
-                'choice_label' => 'name',
-                'placeholder' => 'Sélectionnez la marque de votre véhicule',
-                'required' => false,
-                'label' => 'Marque'
+            ->add('vehicle', EntityType::class, [
+                'class' => Vehicle::class,
+                'choice_label' => 'type',
+                'label' => 'Type de véhicule',
             ])
-          
-            ->add('submit', SubmitType::class, [
+        ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary mt-4'
                 ],
                 'label' => 'Publier votre annonce',
-            ]);         
+            ]);    
         }
-
+            
 
     public function configureOptions(OptionsResolver $resolver): void
     {

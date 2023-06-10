@@ -66,7 +66,44 @@
 				{{ form_errors(form.images) }}
 			</div>
 		</div>
-		
+
+		<div class="form-group vehicle-section" style="display:none;">
+    {{ form_label(form.makeCar) }}
+    {{ form_widget(form.makeCar) }}
+    <div class="form-error">
+        {{ form_errors(form.makeCar) }}
+    </div>
+</div>
+
+<div class="form-group vehicle-section" style="display:none;">
+    {{ form_label(form.modelCar) }}
+    {{ form_widget(form.modelCar) }}
+    <div class="form-error">
+        {{ form_errors(form.modelCar) }}
+    </div>
+</div>
+
+		{# Add these checks before accessing the fields #}
+{% if form.makeCar is defined %}
+<div class="form-group vehicle-section" style="display:none;">
+    {{ form_label(form.makeCar) }}
+    {{ form_widget(form.makeCar) }}
+    <div class="form-error">
+        {{ form_errors(form.makeCar) }}
+    </div>
+</div>
+{% endif %}
+
+{% if form.modelCar is defined %}
+<div class="form-group vehicle-section" style="display:none;">
+    {{ form_label(form.modelCar) }}
+    {{ form_widget(form.modelCar) }}
+    <div class="form-error">
+        {{ form_errors(form.modelCar) }}
+    </div>
+</div>
+{% endif %}
+
 
 		{{ form_end(form) }}
 	</div>

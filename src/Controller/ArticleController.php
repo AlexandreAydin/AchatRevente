@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Annonce\Article;
+use App\Entity\Annonce\MultiMedia;
+use App\Entity\Annonce\Vehicle;
 use App\Entity\ArticleImage;
-use App\Entity\Images;
-use App\Form\ArticleType;
+use App\Form\Annonce\ArticleType;
 use App\Repository\Annonce\ArticleRepository;
 use App\Service\PictureService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,55 +34,62 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/ajouter-une-nouvelle-annonce', name: 'app_new.ad')]
-public function new_add(
-    Request $request,
-    EntityManagerInterface $manager,
-    PictureService $pictureService
-): Response {
-    $article = new Article();
-    $form = $this->createForm(ArticleType::class, $article);
+    public function new_add(
+        Request $request,
+        EntityManagerInterface $manager,
+        PictureService $pictureService
+    ): Response
+    {
+        $sousCategorie = $request->get('sousCategorie');
+        if ($sousCategorie == 'vehicule') {
+            $article = new Vehicle();
+        } else if ($sousCategorie == 'multimedia') {
+            $article = new MultiMedia();
+        }
+        $article= new Article();
+        $form = $this->createForm(ArticleType::class, $article);
 
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-        $images = $form->get('images')->getData();
-        foreach ($images as $image) {
-            if (!($image instanceof UploadedFile)) {
-                continue;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $images = $form->get('images')->getData();
+            foreach ($images as $image) {
+                if (!($image instanceof UploadedFile)) {
+                    continue;
+                }
+
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+
+                // Add a check here to make sure $imageName is not an empty string
+                if (!$imageName || trim($imageName) == '') {
+                    throw new \Exception('Image name not generated or empty');
+                }
+
+                $img = new ArticleImage();
+                $img->setName($imageName);
+
+                // Redimensionner l'image à 300x300 pixels
+                $resizedImageName = $pictureService->add($image, 300, 300);
+                $img->setName($resizedImageName);
+
+                $article->addImage($img);
             }
 
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+            $article->setUser($this->getUser());
 
-            // Add a check here to make sure $imageName is not an empty string
-            if (!$imageName || trim($imageName) == '') {
-                throw new \Exception('Image name not generated or empty');
-            }
+            $manager->persist($article);
+            $manager->flush();
 
-            $img = new ArticleImage();
-            $img->setName($imageName);
-
-            // Redimensionner l'image à 300x300 pixels
-            $resizedImageName = $pictureService->add($image, 300, 300);
-            $img->setName($resizedImageName);
-
-            $article->addImage($img);
+            $this->addFlash(
+                'success',
+                'Votre annonce a été créée avec succès!'
+            );
+            return $this->redirectToRoute('app_ad');
         }
 
-        $article->setUser($this->getUser());
-
-        $manager->persist($article);
-        $manager->flush();
-
-        $this->addFlash(
-            'success',
-            'Votre annonce a été créée avec succès!'
-        );
-        return $this->redirectToRoute('app_ad');
+        return $this->render('pages/article/new.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
-
-    return $this->render('pages/article/new.html.twig', [
-        'form' => $form->createView()
-    ]);
-}
 
     
 
