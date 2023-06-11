@@ -9,6 +9,7 @@ use App\Entity\Categorie;
 use App\Entity\MakeCar;
 use App\Entity\ModelCar;
 use App\Entity\SubCategorie;
+use App\Repository\Annonce\VehicleRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\MakeCarRepository;
 use App\Repository\ModelCarRepository;
@@ -34,14 +35,17 @@ class ArticleType extends AbstractType
 {
     private $categorieRepository;
     private $subCategorieRepository;
+    private $vehicleRepository;
 
 
     public function __construct(
     CategorieRepository $categorieRepository,
-    SubCategorieRepository $subCategorieRepository,)
+    SubCategorieRepository $subCategorieRepository,
+    VehicleRepository $vehicleRepository,)
     {
         $this->categorieRepository = $categorieRepository;
         $this->subCategorieRepository = $subCategorieRepository;
+        $this->vehicleRepository = $vehicleRepository;
     }
 
 
@@ -50,15 +54,20 @@ class ArticleType extends AbstractType
     {
         $categories = $this->categorieRepository->findAll();
         $subCategories = $this->subCategorieRepository->findAll();
+        $vehicles = $this->vehicleRepository->findAll();
     
         $categorieChoices = [];
         $subCategorieChoices = [];
+        $vehicleRepositoryChoices = [];
     
         foreach ($categories as $categorie) {
             $categorieChoices[$categorie->getId()] = $categorie;
         }
         foreach ($subCategories as $subCategorie) {
             $subCategorieChoices[$subCategorie->getId()] = $subCategorie;
+        }
+        foreach ($vehicles as $vehicle) {
+            $vehicleRepositoryChoices[$vehicle->getId()] = $vehicle;
         }
     
         $builder
@@ -130,16 +139,10 @@ class ArticleType extends AbstractType
                 'required' => false,
                 'label' => 'Véhicule'
             ])
-            ->add('categorie', ChoiceType::class, [
-                'choices'  => [
-                    'Vehicule' => 'vehicule',
-                    'Multimedia' => 'multimedia',
-                ],
-            ])
             ->add('vehicle', EntityType::class, [
                 'class' => Vehicle::class,
-                'choice_label' => 'type',
-                'label' => 'Type de véhicule',
+                'choices' => $vehicles,
+                'choice_label' => 'makeCar',  // Assurez-vous que `name` est un attribut valide de Vehicle
             ])
         ->add('submit', SubmitType::class, [
                 'attr' => [

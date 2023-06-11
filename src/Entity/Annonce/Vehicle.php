@@ -4,6 +4,7 @@ namespace App\Entity\Annonce;
 
 use App\Entity\MakeCar;
 use App\Entity\ModelCar;
+use App\Entity\User;
 use App\Repository\Annonce\VehicleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,6 +26,10 @@ class Vehicle extends Article
 
     #[ORM\OneToMany(mappedBy: 'vehicle', targetEntity: Article::class)]
     private Collection $articles;
+
+    #[ORM\ManyToOne(inversedBy: 'vehicles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -87,6 +92,18 @@ class Vehicle extends Article
                 $article->setVehicle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

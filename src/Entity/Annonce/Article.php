@@ -76,6 +76,7 @@ class Article
     private ?SubCategorie $subCategorie = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable:false)]
     private ?Vehicle $vehicle = null;
 
 

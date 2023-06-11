@@ -67,7 +67,7 @@
 			</div>
 		</div>
 
-		<div class="form-group vehicle-section" style="display:none;">
+		{# <div class="form-group vehicle-section" style="display:none;">
     {{ form_label(form.makeCar) }}
     {{ form_widget(form.makeCar) }}
     <div class="form-error">
@@ -81,10 +81,10 @@
     <div class="form-error">
         {{ form_errors(form.modelCar) }}
     </div>
-</div>
+</div> #}
 
 		{# Add these checks before accessing the fields #}
-{% if form.makeCar is defined %}
+{# {% if form.makeCar is defined %}
 <div class="form-group vehicle-section" style="display:none;">
     {{ form_label(form.makeCar) }}
     {{ form_widget(form.makeCar) }}
@@ -102,7 +102,7 @@
         {{ form_errors(form.modelCar) }}
     </div>
 </div>
-{% endif %}
+{% endif %} #}
 
 
 		{{ form_end(form) }}
