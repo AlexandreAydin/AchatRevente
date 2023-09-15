@@ -3,10 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Annonce\Article;
-use App\Entity\Categorie;
-use App\Entity\MakeCar;
-use App\Entity\ModelCar;
-use App\Entity\SubCategorie;
+use App\Entity\Annonce\Categorie;
+use App\Entity\Annonce\SubCategorie;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -34,12 +32,9 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        
         yield MenuItem::linkToCrud('Article', 'fa-solid fa-quote-right', Article::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fa-solid fa-users', User::class);
         yield MenuItem::linkToCrud('Catégorie', 'fa-solid fa-users', Categorie::class);
-        yield MenuItem::linkToCrud('Sous Catégoeie', 'fa-solid fa-users', SubCategorie::class);
-        yield MenuItem::linkToCrud('Marque', 'fa-solid fa-users', MakeCar::class);
-        yield MenuItem::linkToCrud('Modéle', 'fa-solid fa-users', ModelCar::class);
+        yield MenuItem::linkToCrud('Sous Catégorie', 'fa-solid fa-users', SubCategorie::class);
     }
 }

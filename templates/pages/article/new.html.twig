@@ -66,6 +66,32 @@
 				{{ form_errors(form.images) }}
 			</div>
 		</div>
+        
+          <div class="form-group">
+			{{ form_label(form.categorie) }}
+			{{ form_widget(form.categorie) }}
+			<div class="form-error">
+				{{ form_errors(form.categorie) }}
+			</div>
+		</div>
+
+          <div class="form-group">
+			{{ form_label(form.subCategorie) }}
+			{{ form_widget(form.subCategorie) }}
+			<div class="form-error">
+				{{ form_errors(form.subCategorie) }}
+			</div>
+		</div> 
+<div id="voituresDiv" style="display:none;">
+    {{ form_label(form.voitures) }}
+    {{ form_widget(form.voitures) }}
+</div>
+
+
+<div id="consoleAndGamesDiv" style="display:none;">
+    {{ form_label(form.consoleAndGames) }}
+    {{ form_widget(form.consoleAndGames) }}
+</div>
 
 		{# <div class="form-group vehicle-section" style="display:none;">
     {{ form_label(form.makeCar) }}
@@ -107,16 +133,14 @@
 
 		{{ form_end(form) }}
 	</div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	 <script>
-// 	
+
 
 
 window.onload = () => {
     let categorieSelect = document.querySelector("#article_categorie");
     let subCategorieSelect = document.querySelector("#article_subCategorie");
-    let makeCarSelect = document.querySelector("#article_makeCar");
-    let modelCarSelect = document.querySelector("#article_modelCar");
 
     const appendOptions = (data, selectElement, placeholderName) => {
         // Clear current options
@@ -148,35 +172,35 @@ window.onload = () => {
             .then(data => appendOptions(data, subCategorieSelect, selectedOption))
             .catch(handleError);
     });
-
-    subCategorieSelect.addEventListener("change", function() {
-        let selectedOption = this.options[this.selectedIndex].text;
-        fetch(`/get-make-cars/${this.value}`)
-            .then(response => response.json())
-            .then(data => appendOptions(data, makeCarSelect, selectedOption))
-            .catch(handleError);
-    });
-
-	makeCarSelect.addEventListener("change", function() {
-    let selectedOption = this.options[this.selectedIndex].text;
-    fetch(`/get-model-cars/${this.value}`)
-        .then(response => response.json())
-        .then(data => appendOptions(data, modelCarSelect, selectedOption))
-        .catch(handleError);
-});
-	
 }
 
 
 
+    $('#article_subCategorie').on('change', function() {
+    const selectedSubCategory = $(this).val(); 
+    console.log("La sous-catégorie a changé à: " + selectedSubCategory);
 
+    if (selectedSubCategory === '1') {  // "Voitures"
+     $('#voituresDiv').css("display", "block"); 
+        $('#article_consoleAndGames :input').removeAttr('required');
+        $('#article_voitures :input').attr('required', 'required');
+    } else {
+          $('#voituresDiv').css("display", "none"); 
+        $('#article_voitures :input').removeAttr('required');
+        $('#article_consoleAndGames :input').attr('required', 'required');
+    }
 
+    if (selectedSubCategory === '4') {  // "ConsoleAndGames"
+     $('#consoleAndGamesDiv').css("display", "block"); 
+        $('#article_voitures :input').removeAttr('required');
+        $('#article_consoleAndGames :input').attr('required', 'required');
+    } else {
+         $('#consoleAndGamesDiv').css("display", "none"); 
+        $('#article_consoleAndGames :input').removeAttr('required');
+        $('#article_voitures :input').attr('required', 'required');
+    }
 
-
-
-
-
-
+    });
     </script>
 
 {% endblock %}

@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Categorie;
+use App\Entity\Annonce\Categorie;
 use App\Entity\MakeCar;
 use App\Entity\ModelCar;
-use App\Entity\SubCategorie;
+use App\Entity\Annonce\SubCategorie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;

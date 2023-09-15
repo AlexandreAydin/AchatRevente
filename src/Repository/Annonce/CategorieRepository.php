@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Annonce;
 
-use App\Entity\SubCategorie;
+use App\Entity\Annonce\Categorie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<SubCategorie>
+ * @extends ServiceEntityRepository<Categorie>
  *
- * @method SubCategorie|null find($id, $lockMode = null, $lockVersion = null)
- * @method SubCategorie|null findOneBy(array $criteria, array $orderBy = null)
- * @method SubCategorie[]    findAll()
- * @method SubCategorie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Categorie|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Categorie|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Categorie[]    findAll()
+ * @method Categorie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SubCategorieRepository extends ServiceEntityRepository
+class CategorieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SubCategorie::class);
+        parent::__construct($registry, Categorie::class);
     }
 
-    public function save(SubCategorie $entity, bool $flush = false): void
+    public function save(Categorie $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class SubCategorieRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(SubCategorie $entity, bool $flush = false): void
+    public function remove(Categorie $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class SubCategorieRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return SubCategorie[] Returns an array of SubCategorie objects
+//     * @return Categorie[] Returns an array of Categorie objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class SubCategorieRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?SubCategorie
+//    public function findOneBySomeField($value): ?Categorie
 //    {
 //        return $this->createQueryBuilder('s')
 //            ->andWhere('s.exampleField = :val')

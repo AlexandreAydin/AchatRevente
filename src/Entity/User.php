@@ -47,17 +47,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class, orphanRemoval: true)]
     private Collection $articles;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vehicle::class, orphanRemoval: true)]
-    private Collection $vehicles;
     
-
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
-        $this->vehicles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -213,34 +208,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Vehicle>
-     */
-    public function getVehicles(): Collection
-    {
-        return $this->vehicles;
-    }
-
-    public function addVehicle(Vehicle $vehicle): static
-    {
-        if (!$this->vehicles->contains($vehicle)) {
-            $this->vehicles->add($vehicle);
-            $vehicle->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVehicle(Vehicle $vehicle): static
-    {
-        if ($this->vehicles->removeElement($vehicle)) {
-            // set the owning side to null (unless already changed)
-            if ($vehicle->getUser() === $this) {
-                $vehicle->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 
 }

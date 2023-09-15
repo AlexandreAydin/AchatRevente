@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Annonce\MultiMedia;
 
-use App\Entity\Categorie;
+use App\Entity\Annonce\MultiMedia\ConsoleAndGames;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Categorie>
+ * @extends ServiceEntityRepository<ConsoleAndGames>
  *
- * @method Categorie|null find($id, $lockMode = null, $lockVersion = null)
- * @method Categorie|null findOneBy(array $criteria, array $orderBy = null)
- * @method Categorie[]    findAll()
- * @method Categorie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ConsoleAndGames|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ConsoleAndGames|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ConsoleAndGames[]    findAll()
+ * @method ConsoleAndGames[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CategorieRepository extends ServiceEntityRepository
+class ConsoleAndGamesRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Categorie::class);
+        parent::__construct($registry, ConsoleAndGames::class);
     }
 
-    public function save(Categorie $entity, bool $flush = false): void
+    public function save(ConsoleAndGames $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CategorieRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Categorie $entity, bool $flush = false): void
+    public function remove(ConsoleAndGames $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CategorieRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Categorie[] Returns an array of Categorie objects
+//     * @return ConsoleAndGames[] Returns an array of ConsoleAndGames objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CategorieRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Categorie
+//    public function findOneBySomeField($value): ?ConsoleAndGames
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

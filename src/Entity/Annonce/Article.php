@@ -2,17 +2,17 @@
 
 namespace App\Entity\Annonce;
 
+use App\Entity\Annonce\MultiMedia\ConsoleAndGames;
+use App\Entity\Annonce\Vehicule\Voitures;
 use App\Entity\ArticleImage;
-use App\Entity\Categorie;
-use App\Entity\MakeCar;
-use App\Entity\ModelCar;
-use App\Entity\SubCategorie;
+use App\Entity\Annonce\Categorie;
 use App\Entity\User;
 use App\Repository\Annonce\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -62,23 +62,19 @@ class Article
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleImage::class,  cascade: ['persist'], orphanRemoval: true)]
     private Collection $images;
 
-    #[ORM\ManyToOne(inversedBy: 'article')]
-    #[ORM\JoinColumn(nullable:true)]
-    private ?MakeCar $makeCar = null;
-
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?Categorie $categorie = null;
 
-    #[ORM\ManyToOne(inversedBy: 'articles')]
-    private ?ModelCar $modelCar = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Assert\NotBlank(groups: ["Voitures"])]
+    private ?Voitures $voitures = null;
 
-    #[ORM\ManyToOne(inversedBy: 'article')]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Assert\NotBlank(groups: ["consoleAndGames"])]
+    private ?ConsoleAndGames $consoleAndGames = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?SubCategorie $subCategorie = null;
-
-    #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable:false)]
-    private ?Vehicle $vehicle = null;
-
 
     public function __construct()
     {
@@ -243,18 +239,6 @@ class Article
         return $this;
     }
 
-    public function getMakeCar(): ?MakeCar
-    {
-        return $this->makeCar;
-    }
-
-    public function setMakeCar(?MakeCar $makeCar): self
-    {
-        $this->makeCar = $makeCar;
-
-        return $this;
-    }
-
     public function getCategorie(): ?Categorie
     {
         return $this->categorie;
@@ -267,18 +251,19 @@ class Article
         return $this;
     }
 
-    public function getModelCar(): ?ModelCar
+    public function getVoitures(): ?Voitures
     {
-        return $this->modelCar;
+        return $this->voitures;
     }
 
-    public function setModelCar(?ModelCar $modelCar): self
+    public function setVoitures(?Voitures $voitures): static
     {
-        $this->modelCar = $modelCar;
+        $this->voitures = $voitures;
 
         return $this;
     }
 
+ 
     public function getSubCategorie(): ?SubCategorie
     {
         return $this->subCategorie;
@@ -291,17 +276,16 @@ class Article
         return $this;
     }
 
-    public function getVehicle(): ?Vehicle
+    public function getConsoleAndGames(): ?ConsoleAndGames
     {
-        return $this->vehicle;
+        return $this->consoleAndGames;
     }
 
-    public function setVehicle(?Vehicle $vehicle): static
+    public function setConsoleAndGames(?ConsoleAndGames $consoleAndGames): static
     {
-        $this->vehicle = $vehicle;
+        $this->consoleAndGames = $consoleAndGames;
 
         return $this;
     }
-
 
 }

@@ -2,23 +2,24 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Annonce\Categorie;
+use App\Entity\Annonce\Vehicule\Voitures;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class CategorieCrudController extends AbstractCrudController
+class VoituresCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Categorie::class;
+        return Voitures::class;
     }
 
+    /*
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('name'),
+            IdField::new('id'),
+            TextField::new('title'),
+            TextEditorField::new('description'),
         ];
     }
-    
+    */
 }

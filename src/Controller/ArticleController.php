@@ -3,8 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Annonce\Article;
-use App\Entity\Annonce\MultiMedia;
-use App\Entity\Annonce\Vehicle;
 use App\Entity\ArticleImage;
 use App\Form\Annonce\ArticleType;
 use App\Repository\Annonce\ArticleRepository;
@@ -16,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -40,12 +39,7 @@ class ArticleController extends AbstractController
         PictureService $pictureService
     ): Response
     {
-        $sousCategorie = $request->get('sousCategorie');
-        if ($sousCategorie == 'vehicule') {
-            $article = new Vehicle();
-        } else if ($sousCategorie == 'multimedia') {
-            $article = new MultiMedia();
-        }
+       
         $article= new Article();
         $form = $this->createForm(ArticleType::class, $article);
 
@@ -91,6 +85,51 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    // #[Route('/ajouter-une-nouvelle-annonce', name: 'app_new.ad')]
+    // public function new_add(Request $request,
+    // EntityManagerInterface $manager,
+    // PictureService $pictureService,
+    // ValidatorInterface $validator): Response
+    // {
+    //     $article = new Article();
+    //     $form = $this->createForm(ArticleType::class, $article);
+    //     $form->handleRequest($request);
+        
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $images = $form->get('images')->getData();
+    //         foreach ($images as $image) {
+    //             if (!($image instanceof UploadedFile)) {
+    //                 continue;
+    //             }
+
+    //             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+    //             if (!$imageName || trim($imageName) == '') {
+    //                 throw new \Exception('Image name not generated or empty');
+    //             }
+
+    //             // Redimensionner l'image à 300x300 pixels
+    //             $resizedImageName = $pictureService->add($image, 300, 300);
+                
+    //             $img = new ArticleImage();
+    //             $img->setName($resizedImageName);
+    //             $article->addImage($img);
+    //         }
+
+
+
+
+    //         $article->setUser($this->getUser());
+    //         $manager->persist($article);
+    //         $manager->flush();
+
+    //         $this->addFlash('success', 'Votre annonce a été créée avec succès!');
+    //         return $this->redirectToRoute('app_ad');
+    //     }
+
+    //     return $this->render('pages/article/new.html.twig', ['form' => $form->createView()]);
+    // }
+
+
     
 
     #[Route('/annonce/{id}', name:"app_ad.show")]
@@ -108,7 +147,17 @@ class ArticleController extends AbstractController
     EntityManagerInterface $manager,
     PictureService $pictureService): Response
     {
-        $form = $this->createForm(ArticleType::class, $article);
+        // $form = $this->createForm(ArticleType::class, $article);
+    $sousCategorie = $article->getSubCategorie() ? $article->getSubCategorie()->getName() : null;
+
+    if (!$sousCategorie) {
+        throw new \Exception("Sous-catégorie non trouvée pour l'article");
+    }
+
+    $form = $this->createForm(ArticleType::class, $article, [
+        'validation_groups' => [$sousCategorie], // Utilisez la variable ici
+    ]);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $images = $form->get('images')->getData();

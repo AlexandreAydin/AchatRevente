@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Annonce;
 
 use App\Entity\Annonce\Article;
-use App\Repository\CategorieRepository;
+use App\Entity\Annonce\SubCategorie;
+use App\Repository\Annonce\CategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,7 @@ class Categorie
 
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: SubCategorie::class)]
     private Collection $subCategories;
+
 
     public function __toString()
     {
@@ -115,4 +117,5 @@ class Categorie
 
         return $this;
     }
+   
 }

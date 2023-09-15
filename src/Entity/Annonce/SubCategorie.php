@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Annonce;
 
-use App\Entity\Annonce\Article;
-use App\Repository\SubCategorieRepository;
+use App\Entity\Annonce\Categorie;
+use App\Repository\Annonce\SubCategorieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,27 +16,18 @@ class SubCategorie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'subCategories')]
     private ?Categorie $categorie = null;
 
     #[ORM\OneToMany(mappedBy: 'subCategorie', targetEntity: Article::class)]
-    private Collection $article;
-
-    #[ORM\OneToMany(mappedBy: 'subCategorie', targetEntity: MakeCar::class)]
-    private Collection $makeCars;
-
-    public function __toString()
-    {
-        return $this->name;
-    }
+    private Collection $articles;
 
     public function __construct()
     {
-        $this->article = new ArrayCollection();
-        $this->makeCars = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -49,7 +40,7 @@ class SubCategorie
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -71,15 +62,15 @@ class SubCategorie
     /**
      * @return Collection<int, Article>
      */
-    public function getArticle(): Collection
+    public function getArticles(): Collection
     {
-        return $this->article;
+        return $this->articles;
     }
 
     public function addArticle(Article $article): static
     {
-        if (!$this->article->contains($article)) {
-            $this->article->add($article);
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
             $article->setSubCategorie($this);
         }
 
@@ -88,7 +79,7 @@ class SubCategorie
 
     public function removeArticle(Article $article): static
     {
-        if ($this->article->removeElement($article)) {
+        if ($this->articles->removeElement($article)) {
             // set the owning side to null (unless already changed)
             if ($article->getSubCategorie() === $this) {
                 $article->setSubCategorie(null);
@@ -98,33 +89,5 @@ class SubCategorie
         return $this;
     }
 
-    /**
-     * @return Collection<int, MakeCar>
-     */
-    public function getMakeCars(): Collection
-    {
-        return $this->makeCars;
-    }
 
-    public function addMakeCar(MakeCar $makeCar): static
-    {
-        if (!$this->makeCars->contains($makeCar)) {
-            $this->makeCars->add($makeCar);
-            $makeCar->setSubCategorie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMakeCar(MakeCar $makeCar): static
-    {
-        if ($this->makeCars->removeElement($makeCar)) {
-            // set the owning side to null (unless already changed)
-            if ($makeCar->getSubCategorie() === $this) {
-                $makeCar->setSubCategorie(null);
-            }
-        }
-
-        return $this;
-    }
 }
