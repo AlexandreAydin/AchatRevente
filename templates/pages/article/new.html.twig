@@ -82,54 +82,16 @@
 				{{ form_errors(form.subCategorie) }}
 			</div>
 		</div> 
-<div id="voituresDiv" style="display:none;">
-    {{ form_label(form.voitures) }}
-    {{ form_widget(form.voitures) }}
-</div>
+        <div id="voituresDiv" style="display:none;">
+            {{ form_label(form.voitures) }}
+            {{ form_widget(form.voitures) }}
+        </div>
 
 
-<div id="consoleAndGamesDiv" style="display:none;">
-    {{ form_label(form.consoleAndGames) }}
-    {{ form_widget(form.consoleAndGames) }}
-</div>
-
-		{# <div class="form-group vehicle-section" style="display:none;">
-    {{ form_label(form.makeCar) }}
-    {{ form_widget(form.makeCar) }}
-    <div class="form-error">
-        {{ form_errors(form.makeCar) }}
-    </div>
-</div>
-
-<div class="form-group vehicle-section" style="display:none;">
-    {{ form_label(form.modelCar) }}
-    {{ form_widget(form.modelCar) }}
-    <div class="form-error">
-        {{ form_errors(form.modelCar) }}
-    </div>
-</div> #}
-
-		{# Add these checks before accessing the fields #}
-{# {% if form.makeCar is defined %}
-<div class="form-group vehicle-section" style="display:none;">
-    {{ form_label(form.makeCar) }}
-    {{ form_widget(form.makeCar) }}
-    <div class="form-error">
-        {{ form_errors(form.makeCar) }}
-    </div>
-</div>
-{% endif %}
-
-{% if form.modelCar is defined %}
-<div class="form-group vehicle-section" style="display:none;">
-    {{ form_label(form.modelCar) }}
-    {{ form_widget(form.modelCar) }}
-    <div class="form-error">
-        {{ form_errors(form.modelCar) }}
-    </div>
-</div>
-{% endif %} #}
-
+        <div id="consoleAndGamesDiv" style="display:none;">
+            {{ form_label(form.consoleAndGames) }}
+            {{ form_widget(form.consoleAndGames) }}
+        </div>
 
 		{{ form_end(form) }}
 	</div>
@@ -137,55 +99,169 @@
 	 <script>
 
 
+// En js
+// window.onload = () => {
+//     let categorieSelect = document.querySelector("#article_categorie");
+//     let subCategorieSelect = document.querySelector("#article_subCategorie");
 
-window.onload = () => {
-    let categorieSelect = document.querySelector("#article_categorie");
-    let subCategorieSelect = document.querySelector("#article_subCategorie");
+//     const appendOptions = (data, selectElement, placeholderName) => {
+//         // Clear current options
+//         selectElement.innerHTML = "";
 
-    const appendOptions = (data, selectElement, placeholderName) => {
-        // Clear current options
-        selectElement.innerHTML = "";
+//         // Add placeholder option
+//         let optPlaceholder = document.createElement('option');
+//         optPlaceholder.value = "";
+//         optPlaceholder.innerHTML = `Choisir ${placeholderName}...`;
+//         selectElement.appendChild(optPlaceholder);
 
-        // Add placeholder option
-        let optPlaceholder = document.createElement('option');
-        optPlaceholder.value = "";
-        optPlaceholder.innerHTML = `Choisir ${placeholderName}...`;
-        selectElement.appendChild(optPlaceholder);
+//         // Add new options
+//         data.forEach(item => {
+//             let opt = document.createElement('option');
+//             opt.value = item.id;
+//             opt.innerHTML = item.name;
+//             selectElement.appendChild(opt);
+//         });
+//     };
 
-        // Add new options
-        data.forEach(item => {
-            let opt = document.createElement('option');
-            opt.value = item.id;
-            opt.innerHTML = item.name;
-            selectElement.appendChild(opt);
-        });
-    };
+//     const handleError = (error) => {
+//         console.error("An error occurred:", error);
+//     };
 
-    const handleError = (error) => {
-        console.error("An error occurred:", error);
-    };
+//     categorieSelect.addEventListener("change", function() {
+//         let selectedOption = this.options[this.selectedIndex].text;
+//         fetch(`/get-subCategories/${this.value}`)
+//             .then(response => response.json())
+//             .then(data => appendOptions(data, subCategorieSelect, selectedOption))
+//             .catch(handleError);
+//     });
+// }
 
-    categorieSelect.addEventListener("change", function() {
-        let selectedOption = this.options[this.selectedIndex].text;
-        fetch(`/get-subCategories/${this.value}`)
-            .then(response => response.json())
-            .then(data => appendOptions(data, subCategorieSelect, selectedOption))
-            .catch(handleError);
+
+//     $(document).ready(function() {
+//     let $categorieSelect = $("#article_categorie");
+//     let $subCategorieSelect = $("#article_subCategorie");
+//     let $subCategorieSelect = $("#article_voitures_makeOfCar");
+//     let $subCategorieSelect = $(" #article_voitures_CarModel");
+
+//     const appendOptions = (data, $selectElement, placeholderName) => {
+//         // Clear current options
+//         $selectElement.empty();
+
+//         // Add placeholder option
+//         let optPlaceholder = $('<option>', {
+//             value: "",
+//             text: `Choisir ${placeholderName}...`
+//         });
+//         $selectElement.append(optPlaceholder);
+
+//         // Add new options
+//         $.each(data, function(index, item) {
+//             let opt = $('<option>', {
+//                 value: item.id,
+//                 text: item.name
+//             });
+//             $selectElement.append(opt);
+//         });
+//     };
+
+//     const handleError = (error) => {
+//         console.error("An error occurred:", error);
+//     };
+
+//     $categorieSelect.on("change", function() {
+//         let selectedOption = $(this).find("option:selected").text();
+//         $.ajax({
+//             url: `/get-subCategories/${$(this).val()}`,
+//             type: 'GET',
+//             dataType: 'json',
+//             success: function(data) {
+//                 appendOptions(data, $subCategorieSelect, selectedOption);
+//             },
+//             error: function(error) {
+//                 handleError(error);
+//             }
+//         });
+//     });
+// });
+
+
+//permet de choisir les options selon les associations 
+    $(document).ready(function() {
+        let $categorieSelect = $("#article_categorie");
+        let $subCategorieSelect = $("#article_subCategorie");
+        let $makeOfCarSelect = $("#article_voitures_makeOfCar");
+        let $carModelSelect = $(" #article_voitures_carModel");
+
+        const appendOptions = (data, $selectElement, placeholderName) => {
+            // Clear current options
+            $selectElement.empty();
+
+            // Add placeholder option
+            let optPlaceholder = $('<option>', {
+                value: "",
+                text: `Choisir ${placeholderName}...`
+            });
+            $selectElement.append(optPlaceholder);
+
+            // Add new options
+            $.each(data, function(index, item) {
+                let opt = $('<option>', {
+                    value: item.id,
+                    text: item.name
+                });
+                $selectElement.append(opt);
+            });
+        };
+
+        const handleError = (error) => {
+            console.error("An error occurred:", error);
+        };
+
+        $categorieSelect.on("change", function() {
+            let selectedOption = $(this).find("option:selected").text();
+            $.ajax({
+                url: `/get-subCategories/${$(this).val()}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    appendOptions(data, $subCategorieSelect, selectedOption);
+                },
+                error: function(error) {
+                    handleError(error);
+                }
+            });
     });
-}
 
-
+    $makeOfCarSelect.on("change", function() {
+            let selectedOption = $(this).find("option:selected").text();
+            $.ajax({
+                url: `/get-carModels/${$(this).val()}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    appendOptions(data, $carModelSelect, selectedOption);
+                },
+                error: function(error) {
+                    handleError(error);
+                }
+            });
+        });
+    });
 
     $('#article_subCategorie').on('change', function() {
     const selectedSubCategory = $(this).val(); 
     console.log("La sous-catégorie a changé à: " + selectedSubCategory);
-
+    //permet de rendre les champs obligé selon la sous catégorie choisie 
+    //si je choisi sous catégorie voiture donc les input qui se trouve dans voituretype seront obligé 
+    //d'etre rempli les autres champs n'auront pas d'obligation 
     if (selectedSubCategory === '1') {  // "Voitures"
-     $('#voituresDiv').css("display", "block"); 
+        //avec display on permet d'affiché uniquement voituretype les autre sous catégorie sont en
+        //display none
+        $('#voituresDiv').css("display", "block"); 
         $('#article_consoleAndGames :input').removeAttr('required');
         $('#article_voitures :input').attr('required', 'required');
     } else {
-          $('#voituresDiv').css("display", "none"); 
+        $('#voituresDiv').css("display", "none"); 
         $('#article_voitures :input').removeAttr('required');
         $('#article_consoleAndGames :input').attr('required', 'required');
     }
@@ -201,6 +277,32 @@ window.onload = () => {
     }
 
     });
+
+//le champ sous-catégorie ne peut être selectioné avant catégorie 
+$(document).ready(function() {
+        $("#article_subCategorie").prop("disabled", true);
+        $("#article_voitures_carModel").prop("disabled",true);
+
+        //Sous catégorie
+        $("#article_categorie").on("change", function() {
+        if ($(this).val()) {  // Si une valeur est sélectionnée
+            $("#article_subCategorie").prop("disabled", false);  // Activer le champ sous-catégorie
+        } else {
+            $("#article_subCategorie").prop("disabled", true);  // Désactiver le champ sous-catégorie si aucune catégorie n'est sélectionnée
+        }
+
+        // Model
+        $("#article_voitures_makeOfCar").on("change",function(){
+            if ($(this).val()) {
+            $("#article_voitures_carModel").prop("disabled", false);  // Activer le champ sous-catégorie
+        } else {
+            $("#article_voitures_carModel").prop("disabled", true);  // Désactiver le champ sous-catégorie si aucune catégorie n'est sélectionnée
+        }
+        })
+    });
+});
+
+    
     </script>
 
 {% endblock %}

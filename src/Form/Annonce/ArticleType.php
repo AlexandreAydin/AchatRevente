@@ -29,44 +29,44 @@ use Symfony\Component\Validator\Constraints\All;
 class ArticleType extends AbstractType
 {
 
-    private $categorieRepository;
-    private $subCategorieRepository;
-    private $voituresRepository;
+    // private $categorieRepository;
+    // private $subCategorieRepository;
+    // private $voituresRepository;
 
 
-    public function __construct(
-    CategorieRepository $categorieRepository,
-    SubCategorieRepository $subCategorieRepository,
-    VoituresRepository $voituresRepository)
-    {
-        $this->categorieRepository = $categorieRepository;
-        $this->subCategorieRepository = $subCategorieRepository;
-        $this->voituresRepository = $voituresRepository;
-    }
+    // public function __construct(
+    // CategorieRepository $categorieRepository,
+    // SubCategorieRepository $subCategorieRepository,
+    // VoituresRepository $voituresRepository)
+    // {
+    //     $this->categorieRepository = $categorieRepository;
+    //     $this->subCategorieRepository = $subCategorieRepository;
+    //     $this->voituresRepository = $voituresRepository;
+    // }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $categories = $this->categorieRepository->findAll();
-        $subCategories = $this->subCategorieRepository->findAll();
-        $voitures =  $this->voituresRepository->findAll();
+        // $categories = $this->categorieRepository->findAll();
+        // $subCategories = $this->subCategorieRepository->findAll();
+        // $voitures =  $this->voituresRepository->findAll();
 
 
-        $categorieChoices = [];
-        $subCategorieChoices = [];
-        $voituresChoices = [];
+        // $categorieChoices = [];
+        // $subCategorieChoices = [];
+        // $voituresChoices = [];
 
 
-        foreach ($categories as $categorie) {
-            $categorieChoices[$categorie->getId()] = $categorie;
-        }
-        foreach ($subCategories as $subCategorie) {
-            $subCategorieChoices[$subCategorie->getId()] = $subCategorie;
-        }
+        // foreach ($categories as $categorie) {
+        //     $categorieChoices[$categorie->getId()] = $categorie;
+        // }
+        // foreach ($subCategories as $subCategorie) {
+        //     $subCategorieChoices[$subCategorie->getId()] = $subCategorie;
+        // }
 
-        foreach ($voitures as $voiture) {
-            $voituresChoices[$voiture->getId()] = $voiture;
-        }
+        // foreach ($voitures as $voiture) {
+        //     $voituresChoices[$voiture->getId()] = $voiture;
+        // }
       
         $builder
         ->add('title', TextType::class,[
@@ -172,7 +172,6 @@ class ArticleType extends AbstractType
                     'style' => 'display:none;'
                 ],
             ])
-            
             ->add('voitures', VoituresType::class, [
                 'label' => 'Voiture',
                 'required' => false,
@@ -180,9 +179,7 @@ class ArticleType extends AbstractType
             ->add('consoleAndGames', ConsoleAndGamesType::class, [
                 'label' => 'consoleAndGames',
                 'required' => false,
-            ])
-            
-            
+            ])   
             ->add('submit', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary mt-4'],
                 'label' => 'Publier votre annonce',

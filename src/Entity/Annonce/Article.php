@@ -4,6 +4,7 @@ namespace App\Entity\Annonce;
 
 use App\Entity\Annonce\MultiMedia\ConsoleAndGames;
 use App\Entity\Annonce\Vehicule\Voitures;
+use App\Entity\Annonce\Vehicule\Voitures\MakeOfCar;
 use App\Entity\ArticleImage;
 use App\Entity\Annonce\Categorie;
 use App\Entity\User;
@@ -263,7 +264,6 @@ class Article
         return $this;
     }
 
- 
     public function getSubCategorie(): ?SubCategorie
     {
         return $this->subCategorie;
