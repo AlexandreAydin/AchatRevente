@@ -2,9 +2,10 @@
 
 namespace App\Form\Annonce\Vehicule;
 
-use App\Entity\Annonce\Vehicule\Voitures;
-use App\Entity\Annonce\Vehicule\Voitures\CarModel;
-use App\Entity\Annonce\Vehicule\Voitures\MakeOfCar as VoituresMakeOfCar;
+use App\Entity\Annonce\Vehicule\Motos;
+use App\Entity\Annonce\Vehicule\Motos\MakeOfMoto;
+use App\Entity\Annonce\Vehicule\Motos\MotoModel;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,21 +13,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType as TypeTextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class VoituresType extends AbstractType
+class MotosType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $years = range(2023, 1969); // Ceci créera un tableau avec des années allant de 2023 à 1970
         $choices = array_combine($years, $years) + ["1970 avant" => "1970 avant"] ;
         $builder
-        ->add('makeOfCar', EntityType::class, [
-            'class' => VoituresMakeOfCar::class,
+        ->add('makeOfMoto', EntityType::class, [
+            'class' => MakeOfMoto::class,
             'choice_label' => 'name',
             'placeholder' => 'Sélectionnez la marque du véhicule',
             'label' => 'Marque'
         ])
-        ->add('carModel', EntityType::class, [
-            'class' => CarModel::class,
+        ->add('motoModel', EntityType::class, [
+            'class' => MotoModel::class,
             'choice_label' => 'name',
             'placeholder' => 'Sélectionnez la modéle de véhicule',
             'label' => 'Modèle'
@@ -38,27 +39,7 @@ class VoituresType extends AbstractType
             'placeholder' => 'Choisissez',
             'label' => 'Année modèle'
         ])
-        ->add('carburant', ChoiceType::class, [
-            'choices' => [
-                'Essence' => 'essence',
-                'Diesel' => 'diesel',
-                'Hybride' => 'hybride',
-                'Electrique'=> 'electrique',
-                'Autre' => 'Autre'
-            ],
-            'placeholder' => 'Choisissez',
-            'label' => 'Carburant'
-        ])
-        ->add('gearbox', ChoiceType::class, [
-            'choices' => [
-                'Manuelle' => 'manuelle',
-                'Automatique' => 'automatique',
-                'Semi-automatique' => 'semi-automatique',
-            ],
-            'expanded' => true,
-            'label' => 'Boîte de vitesse'
-        ])
-        ->add('vehicleType',ChoiceType::class,[
+        ->add('type',ChoiceType::class,[
             'choices' => [
                 '4x4 SUV & Crossver'=>'4x4 SUV & Crossver',
                 'Citadine' => 'Citadine',
@@ -74,33 +55,6 @@ class VoituresType extends AbstractType
             ],
             'label' => 'Type de véhicule',
             'placeholder' => 'Choisissez',
-        ])
-        ->add('numberOfSeats',ChoiceType::class,[
-            'choices' => [
-                '2'=>'2',
-                '3'=>'3',
-                '4'=>'4',
-                '5'=>'5',
-                '6 plus'=>'6 plus'
-            ],
-            'label' => 'Nombre de portes',
-            'placeholder' => 'Choisissez',
-        ])
-        ->add('numberOfPlaces',ChoiceType::class,[
-            'choices' => [
-                '2'=>'2',
-                '3'=>'3',
-                '4'=>'4',
-                '5'=>'5',
-                '6'=>'6',
-                '7 plus'=>'7 plus'
-            ],
-            'label' => 'Nombre de places',
-            'placeholder' => 'Choisissez',
-        ])
-        ->add('fiscalPower', TypeTextType::class,[
-            'attr' => ['class' => 'form-control'],
-            'label' => 'Puissance fiscale'
         ])
         ->add('driverLicense', ChoiceType::class, [
             'choices' => [
@@ -142,7 +96,7 @@ class VoituresType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Voitures::class,
+            'data_class' => Motos::class,
         ]);
     }
 }

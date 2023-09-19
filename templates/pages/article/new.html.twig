@@ -87,220 +87,182 @@
             {{ form_widget(form.voitures) }}
         </div>
 
-
-        <div id="consoleAndGamesDiv" style="display:none;">
-            {{ form_label(form.consoleAndGames) }}
-            {{ form_widget(form.consoleAndGames) }}
+        <div id="motosDiv" style="display:none;">
+            {{ form_label(form.motos) }}
+            {{ form_widget(form.motos) }}
         </div>
+
+        <div id="camionsDiv" style="display:none;">
+            {{ form_label(form.camions) }}
+            {{ form_widget(form.camions) }}
+        </div>
+
+        <div id="caravanningDiv" style="display:none;">
+            {{ form_label(form.caravanning) }}
+            {{ form_widget(form.caravanning) }}
+        </div>
+
 
 		{{ form_end(form) }}
 	</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	 <script>
 
-
-// En js
-// window.onload = () => {
-//     let categorieSelect = document.querySelector("#article_categorie");
-//     let subCategorieSelect = document.querySelector("#article_subCategorie");
-
-//     const appendOptions = (data, selectElement, placeholderName) => {
-//         // Clear current options
-//         selectElement.innerHTML = "";
-
-//         // Add placeholder option
-//         let optPlaceholder = document.createElement('option');
-//         optPlaceholder.value = "";
-//         optPlaceholder.innerHTML = `Choisir ${placeholderName}...`;
-//         selectElement.appendChild(optPlaceholder);
-
-//         // Add new options
-//         data.forEach(item => {
-//             let opt = document.createElement('option');
-//             opt.value = item.id;
-//             opt.innerHTML = item.name;
-//             selectElement.appendChild(opt);
-//         });
-//     };
-
-//     const handleError = (error) => {
-//         console.error("An error occurred:", error);
-//     };
-
-//     categorieSelect.addEventListener("change", function() {
-//         let selectedOption = this.options[this.selectedIndex].text;
-//         fetch(`/get-subCategories/${this.value}`)
-//             .then(response => response.json())
-//             .then(data => appendOptions(data, subCategorieSelect, selectedOption))
-//             .catch(handleError);
-//     });
-// }
-
-
-//     $(document).ready(function() {
-//     let $categorieSelect = $("#article_categorie");
-//     let $subCategorieSelect = $("#article_subCategorie");
-//     let $subCategorieSelect = $("#article_voitures_makeOfCar");
-//     let $subCategorieSelect = $(" #article_voitures_CarModel");
-
-//     const appendOptions = (data, $selectElement, placeholderName) => {
-//         // Clear current options
-//         $selectElement.empty();
-
-//         // Add placeholder option
-//         let optPlaceholder = $('<option>', {
-//             value: "",
-//             text: `Choisir ${placeholderName}...`
-//         });
-//         $selectElement.append(optPlaceholder);
-
-//         // Add new options
-//         $.each(data, function(index, item) {
-//             let opt = $('<option>', {
-//                 value: item.id,
-//                 text: item.name
-//             });
-//             $selectElement.append(opt);
-//         });
-//     };
-
-//     const handleError = (error) => {
-//         console.error("An error occurred:", error);
-//     };
-
-//     $categorieSelect.on("change", function() {
-//         let selectedOption = $(this).find("option:selected").text();
-//         $.ajax({
-//             url: `/get-subCategories/${$(this).val()}`,
-//             type: 'GET',
-//             dataType: 'json',
-//             success: function(data) {
-//                 appendOptions(data, $subCategorieSelect, selectedOption);
-//             },
-//             error: function(error) {
-//                 handleError(error);
-//             }
-//         });
-//     });
-// });
-
-
 //permet de choisir les options selon les associations 
-    $(document).ready(function() {
-        let $categorieSelect = $("#article_categorie");
-        let $subCategorieSelect = $("#article_subCategorie");
-        let $makeOfCarSelect = $("#article_voitures_makeOfCar");
-        let $carModelSelect = $(" #article_voitures_carModel");
+   $(document).ready(function() {
+    const $categorieSelect = $("#article_categorie");
+    const $subCategorieSelect = $("#article_subCategorie");
+    const $makeOfCarSelect = $("#article_voitures_makeOfCar");
+    const $carModelSelect = $("#article_voitures_carModel");
+    const $makeOfMotoSelect = $("#article_motos_makeOfMoto");
+    const $motoModelSelect = $("#article_motos_motoModel");
 
-        const appendOptions = (data, $selectElement, placeholderName) => {
-            // Clear current options
-            $selectElement.empty();
-
-            // Add placeholder option
-            let optPlaceholder = $('<option>', {
-                value: "",
-                text: `Choisir ${placeholderName}...`
+    const appendOptions = (data, $selectElement, placeholderName) => {
+        $selectElement.empty();
+        const optPlaceholder = $('<option>', {
+            value: "",
+            text: `Choisir ${placeholderName}...`
+        });
+        $selectElement.append(optPlaceholder);
+        $.each(data, (index, item) => {
+            const opt = $('<option>', {
+                value: item.id,
+                text: item.name
             });
-            $selectElement.append(optPlaceholder);
+            $selectElement.append(opt);
+        });
+    };
 
-            // Add new options
-            $.each(data, function(index, item) {
-                let opt = $('<option>', {
-                    value: item.id,
-                    text: item.name
-                });
-                $selectElement.append(opt);
-            });
-        };
+    const handleError = error => {
+        console.error("An error occurred:", error);
+    };
 
-        const handleError = (error) => {
-            console.error("An error occurred:", error);
-        };
+    const fetchOptions = (url, $selectElement, placeholderName) => {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: data => appendOptions(data, $selectElement, placeholderName),
+            error: handleError
+        });
+    };
 
-        $categorieSelect.on("change", function() {
-            let selectedOption = $(this).find("option:selected").text();
-            $.ajax({
-                url: `/get-subCategories/${$(this).val()}`,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    appendOptions(data, $subCategorieSelect, selectedOption);
-                },
-                error: function(error) {
-                    handleError(error);
-                }
-            });
+    $categorieSelect.on("change", function() {
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-subCategories/${$(this).val()}`;
+        fetchOptions(url, $subCategorieSelect, selectedOption);
     });
 
     $makeOfCarSelect.on("change", function() {
-            let selectedOption = $(this).find("option:selected").text();
-            $.ajax({
-                url: `/get-carModels/${$(this).val()}`,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    appendOptions(data, $carModelSelect, selectedOption);
-                },
-                error: function(error) {
-                    handleError(error);
-                }
-            });
-        });
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-carModels/${$(this).val()}`;
+        fetchOptions(url, $carModelSelect, selectedOption);
     });
 
-    $('#article_subCategorie').on('change', function() {
+    $makeOfMotoSelect.on("change", function() {
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-motoModels/${$(this).val()}`;
+        fetchOptions(url, $motoModelSelect, selectedOption);
+    });
+
+});
+
+
+//     $('#article_subCategorie').on('change', function() {
+//     const selectedSubCategory = $(this).val(); 
+//     console.log("La sous-catégorie a changé à: " + selectedSubCategory);
+//     //permet de rendre les champs obligé selon la sous catégorie choisie 
+//     //si je choisi sous catégorie voiture donc les input qui se trouve dans voituretype seront obligé 
+//     //d'etre rempli les autres champs n'auront pas d'obligation 
+//     if (selectedSubCategory === '1') {  // "Voitures"
+//         //avec display on permet d'affiché uniquement voituretype les autre sous catégorie sont en
+//         //display none
+//         $('#voituresDiv').css("display", "block"); 
+//         $('#article_motos :input').removeAttr('required');
+//         $('#article_voitures :input').attr('required', 'required');
+//     } else {
+//         $('#voituresDiv').css("display", "none"); 
+//         $('#article_voitures :input').removeAttr('required');
+//         $('#article_motos :input').attr('required', 'required');
+//     }
+
+//    if (selectedSubCategory === '2') {  // "Motos"
+//      $('#motosDiv').css("display", "block"); 
+//         $('#article_voitures :input').removeAttr('required');
+//         $('#article_motos :input').attr('required', 'required');
+//     } else {
+//          $('#motosDiv').css("display", "none"); 
+//         $('#article_motos :input').removeAttr('required');
+//         $('#article_voitures :input').attr('required', 'required');
+//     }
+    
+//     });
+
+$('#article_subCategorie').on('change', function() {
     const selectedSubCategory = $(this).val(); 
     console.log("La sous-catégorie a changé à: " + selectedSubCategory);
-    //permet de rendre les champs obligé selon la sous catégorie choisie 
-    //si je choisi sous catégorie voiture donc les input qui se trouve dans voituretype seront obligé 
-    //d'etre rempli les autres champs n'auront pas d'obligation 
-    if (selectedSubCategory === '1') {  // "Voitures"
-        //avec display on permet d'affiché uniquement voituretype les autre sous catégorie sont en
-        //display none
-        $('#voituresDiv').css("display", "block"); 
-        $('#article_consoleAndGames :input').removeAttr('required');
-        $('#article_voitures :input').attr('required', 'required');
-    } else {
-        $('#voituresDiv').css("display", "none"); 
-        $('#article_voitures :input').removeAttr('required');
-        $('#article_consoleAndGames :input').attr('required', 'required');
-    }
 
-    if (selectedSubCategory === '4') {  // "ConsoleAndGames"
-     $('#consoleAndGamesDiv').css("display", "block"); 
-        $('#article_voitures :input').removeAttr('required');
-        $('#article_consoleAndGames :input').attr('required', 'required');
-    } else {
-         $('#consoleAndGamesDiv').css("display", "none"); 
-        $('#article_consoleAndGames :input').removeAttr('required');
-        $('#article_voitures :input').attr('required', 'required');
-    }
+    // Hide all divs and remove 'required' from all inputs first
+$('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv').css("display", "none");
+$('#article_voitures :input, #article_motos :input, #article_caravanning :input, #article_camions :input').removeAttr('required');
 
-    });
+
+    switch (selectedSubCategory) {
+        case '1':  // "Voitures"
+            $('#voituresDiv').css("display", "block");
+            $('#article_voitures :input').attr('required', 'required');
+            break;
+        
+        case '2':  // "Motos"
+            $('#motosDiv').css("display", "block");
+            $('#article_motos :input').attr('required', 'required');
+            break;
+
+        case '3':  // "Camion"
+            $('#camionsDiv').css("display", "block");
+            $('#article_camions :input').attr('required', 'required');
+            break;
+
+         case '7':  // "Caravaning"
+            $('#caravanningDiv').css("display", "block");
+            $('#article_caravanning :input').attr('required', 'required');
+            break;
+    }
+});
+
+
+    
+
 
 //le champ sous-catégorie ne peut être selectioné avant catégorie 
 $(document).ready(function() {
-        $("#article_subCategorie").prop("disabled", true);
-        $("#article_voitures_carModel").prop("disabled",true);
+    
+    // Initially disabling the sub-category and car model dropdowns
+    $("#article_subCategorie").prop("disabled", true);
+    $("#article_voitures_carModel").prop("disabled", true);
+    $("#article_motos_motoModel").prop("disabled", true);
 
-        //Sous catégorie
-        $("#article_categorie").on("change", function() {
-        if ($(this).val()) {  // Si une valeur est sélectionnée
-            $("#article_subCategorie").prop("disabled", false);  // Activer le champ sous-catégorie
-        } else {
-            $("#article_subCategorie").prop("disabled", true);  // Désactiver le champ sous-catégorie si aucune catégorie n'est sélectionnée
-        }
-
-        // Model
-        $("#article_voitures_makeOfCar").on("change",function(){
+    function toggleDependentDropdown($mainSelect, $dependentSelect) {
+        $mainSelect.on("change", function() {
             if ($(this).val()) {
-            $("#article_voitures_carModel").prop("disabled", false);  // Activer le champ sous-catégorie
-        } else {
-            $("#article_voitures_carModel").prop("disabled", true);  // Désactiver le champ sous-catégorie si aucune catégorie n'est sélectionnée
-        }
-        })
-    });
+                $dependentSelect.prop("disabled", false);
+            } else {
+                $dependentSelect.prop("disabled", true);
+            }
+        });
+    }
+
+    // Sous catégorie
+    toggleDependentDropdown($("#article_categorie"), $("#article_subCategorie"));
+
+    // Model Auto
+    toggleDependentDropdown($("#article_voitures_makeOfCar"), $("#article_voitures_carModel"));
+
+    // Model Moto
+    toggleDependentDropdown($("#article_motos_makeOfMoto"), $("#article_motos_motoModel"));
+
 });
+
 
     
     </script>

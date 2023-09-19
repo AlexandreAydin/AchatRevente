@@ -1,27 +1,27 @@
 <?php
 
-namespace App\Repository\Annonce\MultiMedia;
+namespace App\Repository\Annonce\Vehicule;
 
-use App\Entity\Annonce\MultiMedia\ConsoleAndGames;
+use App\Entity\Annonce\Vehicule\Caravanning;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ConsoleAndGames>
+ * @extends ServiceEntityRepository<Caravanning>
  *
- * @method ConsoleAndGames|null find($id, $lockMode = null, $lockVersion = null)
- * @method ConsoleAndGames|null findOneBy(array $criteria, array $orderBy = null)
- * @method ConsoleAndGames[]    findAll()
- * @method ConsoleAndGames[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Caravanning|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Caravanning|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Caravanning[]    findAll()
+ * @method Caravanning[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ConsoleAndGamesRepository extends ServiceEntityRepository
+class CaravanningRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ConsoleAndGames::class);
+        parent::__construct($registry, Caravanning::class);
     }
 
-    public function save(ConsoleAndGames $entity, bool $flush = false): void
+    public function save(Caravanning $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class ConsoleAndGamesRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(ConsoleAndGames $entity, bool $flush = false): void
+    public function remove(Caravanning $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class ConsoleAndGamesRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return ConsoleAndGames[] Returns an array of ConsoleAndGames objects
+//     * @return Caravanning[] Returns an array of Caravanning objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class ConsoleAndGamesRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ConsoleAndGames
+//    public function findOneBySomeField($value): ?Caravanning
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

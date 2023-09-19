@@ -5,7 +5,6 @@ namespace App\Entity\Annonce\Vehicule;
 use App\Entity\Annonce\Vehicule\Voitures\CarModel;
 use App\Entity\Annonce\Vehicule\Voitures\MakeOfCar;
 use App\Repository\Annonce\Vehicule\VoituresRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VoituresRepository::class)]

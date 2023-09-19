@@ -5,11 +5,10 @@ namespace App\Form\Annonce;
 use App\Entity\Annonce\Article;
 use App\Entity\Annonce\Categorie;
 use App\Entity\Annonce\SubCategorie;
-use App\Form\Annonce\MultiMedia\ConsoleAndGamesType;
+use App\Form\Annonce\Vehicule\CamionsType;
+use App\Form\Annonce\Vehicule\CaravanningType;
+use App\Form\Annonce\Vehicule\MotosType;
 use App\Form\Annonce\Vehicule\VoituresType;
-use App\Repository\Annonce\CategorieRepository;
-use App\Repository\Annonce\SubCategorieRepository;
-use App\Repository\Annonce\Vehicule\VoituresRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Form\AbstractType;
@@ -28,46 +27,10 @@ use Symfony\Component\Validator\Constraints\All;
 
 class ArticleType extends AbstractType
 {
-
-    // private $categorieRepository;
-    // private $subCategorieRepository;
-    // private $voituresRepository;
-
-
-    // public function __construct(
-    // CategorieRepository $categorieRepository,
-    // SubCategorieRepository $subCategorieRepository,
-    // VoituresRepository $voituresRepository)
-    // {
-    //     $this->categorieRepository = $categorieRepository;
-    //     $this->subCategorieRepository = $subCategorieRepository;
-    //     $this->voituresRepository = $voituresRepository;
-    // }
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        // $categories = $this->categorieRepository->findAll();
-        // $subCategories = $this->subCategorieRepository->findAll();
-        // $voitures =  $this->voituresRepository->findAll();
-
-
-        // $categorieChoices = [];
-        // $subCategorieChoices = [];
-        // $voituresChoices = [];
-
-
-        // foreach ($categories as $categorie) {
-        //     $categorieChoices[$categorie->getId()] = $categorie;
-        // }
-        // foreach ($subCategories as $subCategorie) {
-        //     $subCategorieChoices[$subCategorie->getId()] = $subCategorie;
-        // }
-
-        // foreach ($voitures as $voiture) {
-        //     $voituresChoices[$voiture->getId()] = $voiture;
-        // }
-      
         $builder
         ->add('title', TextType::class,[
             'attr' => ['class' => 'form-control'],
@@ -127,27 +90,6 @@ class ArticleType extends AbstractType
                     )
                 ]
             ])
-            // ->add('categorie', ChoiceType::class, [
-            //     'choices' => $categorieChoices,
-            //     'choice_value' => function (?Categorie $entity) {
-            //         return $entity ? $entity->getId() : '';
-            //     },
-            //     'choice_label' => 'name',
-            //     'placeholder' => 'Sélectionnez votre Catégorie',
-            //     'required' => false,
-            //     'label' => 'Véhicule'
-            // ])
-            // ->add('subCategorie', ChoiceType::class, [
-            //     'choices' => $subCategorieChoices,
-            //     'choice_value' => function (?SubCategorie $entity) {
-            //         return $entity ? $entity->getId() : '';
-            //     },
-            //     'choice_label' => 'name',
-            //     'placeholder' => 'Sélectionnez Sous Catégorie',
-            //     'required' => false,
-            //     'label' => 'Véhicule'
-            // ])
-
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'name',
@@ -158,28 +100,25 @@ class ArticleType extends AbstractType
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionnez Sous Catégorie',
             ])
+            //Vehicule start
             ->add('voitures', VoituresType::class, [
-                'label' => 'Voiture',
                 'required' => false,
-                'attr' => [
-                    'style' => 'display:none;'
-                ],
-            ])
-            ->add('consoleAndGames', ConsoleAndGamesType::class, [
-                'label' => 'consoleAndGames',
-                'required' => false,
-                'attr' => [
-                    'style' => 'display:none;'
-                ],
-            ])
-            ->add('voitures', VoituresType::class, [
-                'label' => 'Voiture',
-                'required' => false,
-            ])
-            ->add('consoleAndGames', ConsoleAndGamesType::class, [
-                'label' => 'consoleAndGames',
-                'required' => false,
+                'label' => ' ',
             ])   
+            ->add('motos', MotosType::class,[
+                'required' => false,
+                'label' => ' ',
+            ])
+            ->add('caravanning', CaravanningType::class,[
+                'required' => false,
+                'label' => 'caravane ',
+            ])
+            ->add('camions', CamionsType::class,[
+                'required' => false,
+                'label' => ' camions ',
+            ])
+
+
             ->add('submit', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary mt-4'],
                 'label' => 'Publier votre annonce',

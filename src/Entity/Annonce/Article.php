@@ -2,11 +2,14 @@
 
 namespace App\Entity\Annonce;
 
-use App\Entity\Annonce\MultiMedia\ConsoleAndGames;
+
+use App\Entity\Annonce\Vehicule\Caravanning;
+use App\Entity\Annonce\Vehicule\Motos;
 use App\Entity\Annonce\Vehicule\Voitures;
 use App\Entity\Annonce\Vehicule\Voitures\MakeOfCar;
 use App\Entity\ArticleImage;
 use App\Entity\Annonce\Categorie;
+use App\Entity\Annonce\Vehicule\Camions;
 use App\Entity\User;
 use App\Repository\Annonce\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -70,12 +73,17 @@ class Article
     #[Assert\NotBlank(groups: ["Voitures"])]
     private ?Voitures $voitures = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Assert\NotBlank(groups: ["consoleAndGames"])]
-    private ?ConsoleAndGames $consoleAndGames = null;
-
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?SubCategorie $subCategorie = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Motos $motos = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Caravanning $caravanning = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Camions $camions = null;
 
     public function __construct()
     {
@@ -276,14 +284,38 @@ class Article
         return $this;
     }
 
-    public function getConsoleAndGames(): ?ConsoleAndGames
+    public function getMotos(): ?Motos
     {
-        return $this->consoleAndGames;
+        return $this->motos;
     }
 
-    public function setConsoleAndGames(?ConsoleAndGames $consoleAndGames): static
+    public function setMotos(?Motos $motos): static
     {
-        $this->consoleAndGames = $consoleAndGames;
+        $this->motos = $motos;
+
+        return $this;
+    }
+
+    public function getCaravanning(): ?Caravanning
+    {
+        return $this->caravanning;
+    }
+
+    public function setCaravanning(?Caravanning $caravanning): static
+    {
+        $this->caravanning = $caravanning;
+
+        return $this;
+    }
+
+    public function getCamions(): ?Camions
+    {
+        return $this->camions;
+    }
+
+    public function setCamions(?Camions $camions): static
+    {
+        $this->camions = $camions;
 
         return $this;
     }
