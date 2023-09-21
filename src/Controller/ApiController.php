@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Annonce\Categorie;
+use App\Entity\Annonce\Immobilier\Categorie as ImmobilierCategorie;
 use App\Entity\Annonce\SubCategorie;
 use App\Entity\Annonce\Vehicule\Motos\MakeOfMoto;
 use App\Entity\Annonce\Vehicule\Motos\MotoModel;
@@ -69,6 +70,22 @@ class ApiController extends AbstractController
                 'name' => $motoModel->getName()
             ];
         }
+        return new JsonResponse($responseArray);
+    }
+    //Immobilier
+    #[Route("/get-immobilierCategories/{id}", name:"get_immobilierCategories")]
+    public function getimmobilierCategories(SubCategorie $subCategorie): JsonResponse
+    {
+        $immobilierCategories = $this->entityManager->getRepository(ImmobilierCategorie::class)->findBy(['subCategorie' => $subCategorie]);
+
+        $responseArray = [];
+        foreach($immobilierCategories as $immobilierCategorie){
+            $responseArray[] = [
+                'id' => $immobilierCategorie->getId(),
+                'name' => $immobilierCategorie->getName()
+            ];
+        }
+
         return new JsonResponse($responseArray);
     }
 }

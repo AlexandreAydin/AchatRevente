@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Annonce\Article;
 use App\Entity\Annonce\Categorie;
+use App\Entity\Annonce\Immobilier\Categorie as ImmobilierCategorie;
 use App\Entity\Annonce\SubCategorie;
 use App\Entity\Annonce\Vehicule\Motos\MakeOfMoto;
 use App\Entity\Annonce\Vehicule\Motos\MotoModel;
@@ -47,6 +48,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::subMenu('Motos', 'fa-solid fa-motorcycle')->setSubItems([
             MenuItem::linkToCrud('Marque Moto','fa-solid fa-users', MakeOfMoto::class),
             MenuItem::linkToCrud('Modél Voiture', 'fa-solid fa-users', MotoModel::class),
+        ]); 
+        yield MenuItem::subMenu('Immobilier', 'fa-regular fa-building')->setSubItems([
+            MenuItem::linkToCrud('Catégorie Immobilière', 'fa-solid fa-users', ImmobilierCategorie::class),
         ]); 
     }
 }

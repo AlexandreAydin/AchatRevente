@@ -3,12 +3,16 @@
 namespace App\Entity\Annonce;
 
 
+use App\Entity\Annonce\Immobilier\ApartementForSale;
 use App\Entity\Annonce\Vehicule\Caravanning;
 use App\Entity\Annonce\Vehicule\Motos;
 use App\Entity\Annonce\Vehicule\Voitures;
 use App\Entity\Annonce\Vehicule\Voitures\MakeOfCar;
 use App\Entity\ArticleImage;
 use App\Entity\Annonce\Categorie;
+use App\Entity\Annonce\Immobilier\ApartementRental;
+use App\Entity\Annonce\Immobilier\HouseForSale;
+use App\Entity\Annonce\Immobilier\HouseRental;
 use App\Entity\Annonce\Vehicule\Camions;
 use App\Entity\User;
 use App\Repository\Annonce\ArticleRepository;
@@ -84,6 +88,21 @@ class Article
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Camions $camions = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?\App\Entity\Annonce\Immobilier\Categorie $immobilierCategorie = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?ApartementForSale $apartmentForSale = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?ApartementRental $apartementRental = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?HouseForSale $houseForSale = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?HouseRental $houseRental = null;
 
     public function __construct()
     {
@@ -316,6 +335,67 @@ class Article
     public function setCamions(?Camions $camions): static
     {
         $this->camions = $camions;
+
+        return $this;
+    }
+
+    public function getImmobilierCategorie(): ?\App\Entity\Annonce\Immobilier\Categorie
+    {
+        return $this->immobilierCategorie;
+    }
+
+    public function setImmobilierCategorie(?\App\Entity\Annonce\Immobilier\Categorie $immobilierCategorie): static
+    {
+        $this->immobilierCategorie = $immobilierCategorie;
+
+        return $this;
+    }
+
+    public function getApartmentForSale(): ?ApartementForSale
+    {
+        return $this->apartmentForSale;
+    }
+
+    public function setApartmentForSale(?ApartementForSale $apartmentForSale): static
+    {
+        $this->apartmentForSale = $apartmentForSale;
+
+        return $this;
+    }
+
+
+    public function getApartementRental(): ?ApartementRental
+    {
+        return $this->apartementRental;
+    }
+
+    public function setApartementRental(?ApartementRental $apartementRental): static
+    {
+        $this->apartementRental = $apartementRental;
+
+        return $this;
+    }
+
+    public function getHouseForSale(): ?HouseForSale
+    {
+        return $this->houseForSale;
+    }
+
+    public function setHouseForSale(?HouseForSale $houseForSale): static
+    {
+        $this->houseForSale = $houseForSale;
+
+        return $this;
+    }
+
+    public function getHouseRental(): ?HouseRental
+    {
+        return $this->houseRental;
+    }
+
+    public function setHouseRental(?HouseRental $houseRental): static
+    {
+        $this->houseRental = $houseRental;
 
         return $this;
     }
