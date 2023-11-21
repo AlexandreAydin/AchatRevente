@@ -31,8 +31,8 @@ class HouseRental
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ageOfBuilding = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $exterior = null;
+    #[ORM\Column(type: "array", nullable: true)]
+    private ?array $exterior = [];
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $parkingSpace = null;
@@ -120,12 +120,12 @@ class HouseRental
         return $this;
     }
 
-    public function getExterior(): ?string
+    public function getExterior(): ?array
     {
         return $this->exterior;
     }
 
-    public function setExterior(?string $exterior): static
+    public function setExterior(?string $exterior): self
     {
         $this->exterior = $exterior;
 

@@ -7,12 +7,12 @@ use App\Entity\Annonce\Immobilier\ApartementForSale;
 use App\Entity\Annonce\Vehicule\Caravanning;
 use App\Entity\Annonce\Vehicule\Motos;
 use App\Entity\Annonce\Vehicule\Voitures;
-use App\Entity\Annonce\Vehicule\Voitures\MakeOfCar;
 use App\Entity\ArticleImage;
 use App\Entity\Annonce\Categorie;
 use App\Entity\Annonce\Immobilier\ApartementRental;
 use App\Entity\Annonce\Immobilier\HouseForSale;
 use App\Entity\Annonce\Immobilier\HouseRental;
+use App\Entity\Annonce\Immobilier\LandForSale;
 use App\Entity\Annonce\Vehicule\Camions;
 use App\Entity\User;
 use App\Repository\Annonce\ArticleRepository;
@@ -67,7 +67,7 @@ class Article
     #[ORM\Column]
     private ?int $postCode = null;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleImage::class,  cascade: ['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: ArticleImage::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $images;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
@@ -104,11 +104,15 @@ class Article
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?HouseRental $houseRental = null;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?LandForSale $landForSale = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->images = new ArrayCollection();
+        // $this->apartmentForSale = new ApartementForSale();
     }
 
     public function getId(): ?int
@@ -396,6 +400,18 @@ class Article
     public function setHouseRental(?HouseRental $houseRental): static
     {
         $this->houseRental = $houseRental;
+
+        return $this;
+    }
+
+    public function getLandForSale(): ?LandForSale
+    {
+        return $this->landForSale;
+    }
+
+    public function setLandForSale(?LandForSale $landForSale): static
+    {
+        $this->landForSale = $landForSale;
 
         return $this;
     }

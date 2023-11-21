@@ -1,28 +1,27 @@
 <?php
 
-namespace App\Repository\Annonce;
+namespace App\Repository\Annonce\Immobilier;
 
-use App\Entity\Annonce\Article;
-
+use App\Entity\Annonce\Immobilier\LandForSale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Article>
+ * @extends ServiceEntityRepository<LandForSale>
  *
- * @method Article|null find($id, $lockMode = null, $lockVersion = null)
- * @method Article|null findOneBy(array $criteria, array $orderBy = null)
- * @method Article[]    findAll()
- * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method LandForSale|null find($id, $lockMode = null, $lockVersion = null)
+ * @method LandForSale|null findOneBy(array $criteria, array $orderBy = null)
+ * @method LandForSale[]    findAll()
+ * @method LandForSale[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ArticleRepository extends ServiceEntityRepository
+class LandForSaleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Article::class);
+        parent::__construct($registry, LandForSale::class);
     }
 
-    public function save(Article $entity, bool $flush = false): void
+    public function save(LandForSale $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -31,7 +30,7 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Article $entity, bool $flush = false): void
+    public function remove(LandForSale $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,16 +38,9 @@ class ArticleRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function paginationQuery()
-    {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.id', 'DESC')
-            ->getQuery()
-            ;
-    }
 
 //    /**
-//     * @return Article[] Returns an array of Article objects
+//     * @return LandForSale[] Returns an array of LandForSale objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -62,7 +54,7 @@ class ArticleRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Article
+//    public function findOneBySomeField($value): ?LandForSale
 //    {
 //        return $this->createQueryBuilder('a')
 //            ->andWhere('a.exampleField = :val')

@@ -15,7 +15,7 @@ class Motos
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $annee = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -27,9 +27,9 @@ class Motos
     #[ORM\Column(nullable: true)]
     private ?int $mileage = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type:"string", length:255, nullable:true)]
     private ?string $color = null;
-
+    
     #[ORM\ManyToOne(inversedBy: 'motos')]
     private ?MakeOfMoto $makeOfMoto = null;
 

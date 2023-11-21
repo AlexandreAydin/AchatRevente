@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Annonce\Article;
+use App\Entity\Annonce\Immobilier\ApartementForSale;
 use App\Entity\ArticleImage;
 use App\Form\Annonce\ArticleType;
 use App\Repository\Annonce\ArticleRepository;
@@ -135,7 +136,7 @@ class ArticleController extends AbstractController
     public function show(Article $article): Response
     {
         return $this->render('pages/article/show.html.twig',[
-            'article'=>$article
+            'article'=>$article,
         ]);
 
     }

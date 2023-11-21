@@ -12,6 +12,7 @@ use App\Form\Annonce\Immobilier\ApartementForSaleType;
 use App\Form\Annonce\Immobilier\ApartementRentalType;
 use App\Form\Annonce\Immobilier\HouseForSaleType;
 use App\Form\Annonce\Immobilier\HouseRentalType;
+use App\Form\Annonce\Immobilier\LandForSaleType;
 use App\Form\Annonce\Vehicule\CamionsType;
 use App\Form\Annonce\Vehicule\CaravanningType;
 use App\Form\Annonce\Vehicule\MotosType;
@@ -154,8 +155,10 @@ class ArticleType extends AbstractType
             'label'=>' ',
         ])
 
-        
-
+        ->add('landForSale', LandForSaleType::class,[
+            'required'=>false,
+            'label'=>' ',
+        ])
 
         ->add('submit', SubmitType::class, [
             'attr' => ['class' => 'btn btn-primary mt-4'],

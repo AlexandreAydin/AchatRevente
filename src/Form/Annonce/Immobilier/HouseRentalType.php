@@ -32,20 +32,20 @@ class HouseRentalType extends AbstractType
             ->add('ageOfBuilding',TextType::class,[
                 'label' => 'Âge de l\'immeuble',
             ])
-            ->add('exterior', ChoiceType::class, [
-                'choices' => [
-                    'Balcon' => 'Balcon',
-                    'Terasse' => 'Terasse',
-                    'Jardin' => 'Jardin',
-                    'Piscine'=> 'Piscine',
-                    'Autre' => 'Autre'
-                ],
-                'expanded' => false,
-                'multiple' => true,
-                'label' => 'Extérieur',
-                'placeholder' => 'Choisissez une option', 
-                'attr' => ['class' => 'select2-enable']
-            ])
+            // ->add('exterior', ChoiceType::class, [
+            //     'choices' => [
+            //         'Balcon' => 'Balcon',
+            //         'Terasse' => 'Terasse',
+            //         'Jardin' => 'Jardin',
+            //         'Piscine'=> 'Piscine',
+            //         'Autre' => 'Autre'
+            //     ],
+            //     'expanded' => false,
+            //     'multiple' => true,
+            //     'label' => 'Extérieur',
+            //     'placeholder' => 'Choisissez une option', 
+            //     'attr' => ['class' => 'select2-enable']
+            // ])
             
             ->add('parkingSpace',ChoiceType::class,[
                 'choices' => [
@@ -53,7 +53,8 @@ class HouseRentalType extends AbstractType
                     '2' => '2',
                     '3 ou plus' => '3',
                 ],
-                'label' => 'Place de parking'
+                'label' => 'Place de parking',
+                'placeholder' => 'Choisissez',
             ])
             ->add('isFurnished',ChoiceType::class,[
                 'choices' =>[

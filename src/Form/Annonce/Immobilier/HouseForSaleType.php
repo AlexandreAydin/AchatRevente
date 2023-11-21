@@ -17,35 +17,41 @@ class HouseForSaleType extends AbstractType
             ->add('livingArea',TextType::class,[
                 'label' => 'Surface habitable',
             ] )
+
             ->add('surfaceArea',TextType::class,[
                 'label' => 'Surface du terrain',
             ] )
+
             ->add('numberOfParts',TextType::class,[
                 'label' => 'Nombre de piéce',
             ] )
+
             ->add('Floor',TextType::class,[
                 'label' => 'Étage',
             ])
+
             ->add('FloorsBuilding',TextType::class,[
                 'label' => 'Étage de l\'immeuble',
             ])
+
             ->add('ageOfBuilding',TextType::class,[
                 'label' => 'Âge de l\'immeuble',
             ])
-            ->add('exterior', ChoiceType::class, [
-                'choices' => [
-                    'Balcon' => 'Balcon',
-                    'Terasse' => 'Terasse',
-                    'Jardin' => 'Jardin',
-                    'Piscine'=> 'Piscine',
-                    'Autre' => 'Autre'
-                ],
-                'expanded' => false,
-                'multiple' => true,
-                'label' => 'Extérieur',
-                'placeholder' => 'Choisissez une option', 
-                'attr' => ['class' => 'select2-enable']
-            ])
+
+            // ->add('exterior', ChoiceType::class, [
+            //     'choices' => [
+            //         'Balcon' => 'Balcon',
+            //         'Terasse' => 'Terasse',
+            //         'Jardin' => 'Jardin',
+            //         'Piscine'=> 'Piscine',
+            //         'Autre' => 'Autre'
+            //     ],
+            //     'expanded' => false,
+            //     'multiple' => true,
+            //     'label' => 'Extérieur',
+            //     'placeholder' => 'Choisissez une option', 
+            //     'attr' => ['class' => 'select2-enable']
+            // ])
             
             ->add('parkingSpace',ChoiceType::class,[
                 'choices' => [
@@ -53,8 +59,10 @@ class HouseForSaleType extends AbstractType
                     '2' => '2',
                     '3 ou plus' => '3',
                 ],
+                'placeholder' => 'Choisissez',
                 'label' => 'Place de parking'
             ])
+            
             ->add('isFurnished',ChoiceType::class,[
                 'choices' =>[
                     'oui' => 'oui',

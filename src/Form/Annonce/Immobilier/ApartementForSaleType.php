@@ -29,28 +29,29 @@ class ApartementForSaleType extends AbstractType
             ->add('ageOfBuilding',TextType::class,[
                 'label' => 'Âge de l\'immeuble',
             ])
-            ->add('exterior', ChoiceType::class, [
-                'choices' => [
-                    'Balcon' => 'Balcon',
-                    'Terasse' => 'Terasse',
-                    'Jardin' => 'Jardin',
-                    'Piscine'=> 'Piscine',
-                    'Autre' => 'Autre'
-                ],
-                'expanded' => false,
-                'multiple' => true,
-                'label' => 'Extérieur',
-                'placeholder' => 'Choisissez une option',  // Ajoutez ceci
-                'attr' => ['class' => 'select2-enable']
-            ])
-            
-            ->add('parkingSpace',ChoiceType::class,[
+            // ->add('exterior', ChoiceType::class, [
+            //     'choices' => [
+            //         'Balcon' => 'Balcon',
+            //         'Terasse' => 'Terasse',
+            //         'Jardin' => 'Jardin',
+            //         'Piscine'=> 'Piscine',
+            //         'Autre' => 'Autre'
+            //     ],
+            //     'attr' => ['class' => 'select2-enable exterior-select'], // Fusionnez les deux classes ici
+            //     'expanded' => false,
+            //     'multiple' => true,
+            //     'label' => 'Extérieur',
+            //     'placeholder' => 'Choisissez une option'
+            // ])
+           
+            ->add('parkingSpace', ChoiceType::class,[
                 'choices' => [
                     '1' => '1',
                     '2' => '2',
                     '3 ou plus' => '3',
                 ],
-                'label' => 'Place de parking'
+                'label' => 'Place de parking',
+                'placeholder' => 'Choisissez',
             ])
             ->add('elevator',ChoiceType::class,[
                 'choices' =>[

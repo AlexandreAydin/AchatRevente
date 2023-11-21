@@ -1,2 +1,24 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+	AchatRevente
+{% endblock %}
+
+{% block body %}
+
+    {# Parcourez et affichez vos articles #}
+    <ul>
+        {% for article in articles %}
+            <li>
+                {{ article.title }} {# Remplacez 'title' par le champ approprié de votre entité Article #}
+                {# Vous pouvez ajouter d'autres champs de l'article comme vous le souhaitez #}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {# Affichez la pagination #}
+    <div class="pagination">
+        {{ knp_pagination_render(articles) }}
+    </div>
+
+{% endblock %}

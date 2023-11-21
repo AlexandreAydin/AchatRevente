@@ -1,3 +1,406 @@
+{# {% extends "base.html.twig" %}
+
+{% block title %}AchatRevente - Nouvelle annonce
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+
+		<h1 class="mt-4">Création d'une annonce</h1>
+
+		{{ form_start(form) }}
+
+		<div class="form-group">
+			{{ form_label(form.title) }}
+			{{ form_widget(form.title) }}
+			<div class="form-error">
+				{{ form_errors(form.title) }}
+			</div>
+		</div>
+
+		<div class="form-group">
+			{{ form_label(form.description) }}
+			{{ form_widget(form.description) }}
+			<div class="form-error">
+				{{ form_errors(form.description) }}
+			</div>
+		</div>
+
+		<div class="form-group">
+			{{ form_label(form.price) }}
+			{{ form_widget(form.price) }}
+			<div class="form-error">
+				{{ form_errors(form.price) }}
+			</div>
+		</div>
+			<div class="form-group mt-4">
+			{{ form_widget(form.isPublic) }}
+			{{ form_label(form.isPublic) }}
+			<div class="form-error">
+				{{ form_errors(form.isPublic) }}
+			</div>
+		</div>
+
+        <div class="form-group">
+			{{ form_label(form.postCode) }}
+			{{ form_widget(form.postCode) }}
+			<div class="form-error">
+				{{ form_errors(form.postCode) }}
+			</div>
+		</div>
+
+        <div class="form-group">
+			{{ form_label(form.city) }}
+			{{ form_widget(form.city) }}
+			<div class="form-error">
+				{{ form_errors(form.city) }}
+			</div>
+		</div>
+
+		<div class="form-group" style="margin-bottom:10px;">
+			<h2>Ajouter des images</h2>
+			<h4>ctrl + click gauche souris pour séléctioner plusieurs photo</h4>
+			{{ form_label(form.images) }}
+			{{ form_widget(form.images, {'attr': {'class': 'image-collection', 'data-index': form.images|length}}) }}
+			<div class="form-error">
+				{{ form_errors(form.images) }}
+			</div>
+		</div>
+        
+        <div class="form-group">
+			{{ form_label(form.categorie) }}
+			{{ form_widget(form.categorie) }}
+			<div class="form-error">
+				{{ form_errors(form.categorie) }}
+			</div>
+		</div>
+
+        <div class="form-group">
+			{{ form_label(form.subCategorie) }}
+			{{ form_widget(form.subCategorie) }}
+			<div class="form-error">
+				{{ form_errors(form.subCategorie) }}
+			</div>
+		</div> 
+
+         <div id="immobilierCategorieDiv" style="display:none;">
+			{{ form_label(form.immobilierCategorie) }}
+			{{ form_widget(form.immobilierCategorie) }}
+			<div class="form-error">
+				{{ form_errors(form.immobilierCategorie) }}
+			</div>
+		</div> 
+
+        <div id="voituresDiv" style="display:none;">
+            {{ form_label(form.voitures) }}
+            {{ form_widget(form.voitures) }}
+        </div>
+
+        <div id="motosDiv" style="display:none;">
+            {{ form_label(form.motos) }}
+            {{ form_widget(form.motos) }}
+        </div>
+
+        <div id="camionsDiv" style="display:none;">
+            {{ form_label(form.camions) }}
+            {{ form_widget(form.camions) }}
+        </div>
+
+        <div id="caravanningDiv" style="display:none;">
+            {{ form_label(form.caravanning) }}
+            {{ form_widget(form.caravanning) }}
+        </div>
+
+        <div id="apartmentForSaleDiv" style="display:none;">
+            {{ form_label(form.apartmentForSale) }}
+            {{ form_widget(form.apartmentForSale) }}
+        </div>
+
+        <div id="apartementRentalDiv" style="display:none;">
+            {{ form_label(form.apartementRental) }}
+            {{ form_widget(form.apartementRental) }}
+        </div>
+
+        <div id="houseForSaleDiv" style="display:none;">
+            {{ form_label(form.houseForSale) }}
+            {{ form_widget(form.houseForSale) }}
+        </div>
+
+        <div id="houseRentalDiv" style="display:none;">
+            {{ form_label(form.houseRental) }}
+            {{ form_widget(form.houseRental) }}
+        </div>
+
+        <div id="landForSaleDiv" style="display:none;">
+            {{ form_label(form.landForSale) }}
+            {{ form_widget(form.landForSale) }}
+        </div>
+
+
+
+
+		{{ form_end(form) }}
+	</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	 <script>
+
+
+
+//permet de choisir les options selon les associations 
+   $(document).ready(function() {
+    const $categorieSelect = $("#article_categorie");
+    const $subCategorieSelect = $("#article_subCategorie");
+    const $makeOfCarSelect = $("#article_voitures_makeOfCar");
+    const $carModelSelect = $("#article_voitures_carModel");
+    const $makeOfMotoSelect = $("#article_motos_makeOfMoto");
+    const $motoModelSelect = $("#article_motos_motoModel");
+    const $immobilierCategorieSelect = $('#article_immobilierCategorie');
+
+    const appendOptions = (data, $selectElement, placeholderName) => {
+        $selectElement.empty();
+        const optPlaceholder = $('<option>', {
+            value: "",
+            text: `Choisir ${placeholderName}...`
+        });
+        $selectElement.append(optPlaceholder);
+        $.each(data, (index, item) => {
+            const opt = $('<option>', {
+                value: item.id,
+                text: item.name
+            });
+            $selectElement.append(opt);
+        });
+    };
+
+    const handleError = error => {
+        console.error("An error occurred:", error);
+    };
+
+    const fetchOptions = (url, $selectElement, placeholderName) => {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: data => appendOptions(data, $selectElement, placeholderName),
+            error: handleError
+        });
+    };
+
+    $categorieSelect.on("change", function() {
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-subCategories/${$(this).val()}`;
+        fetchOptions(url, $subCategorieSelect, selectedOption);
+    });
+
+    $makeOfCarSelect.on("change", function() {
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-carModels/${$(this).val()}`;
+        fetchOptions(url, $carModelSelect, selectedOption);
+    });
+
+    $makeOfMotoSelect.on("change", function() {
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-motoModels/${$(this).val()}`;
+        fetchOptions(url, $motoModelSelect, selectedOption);
+    });
+
+    $subCategorieSelect.on('change', function() {
+        const selectedOption = $(this).find("option:selected").text();
+        const url = `/get-immobilierCategories/${$(this).val()}`;
+        fetchOptions(url, $immobilierCategorieSelect, selectedOption);
+    })
+
+});
+
+// $(document).ready(function() {
+//     // Vérifie si le champ article_immobilierCategorie est vide
+//     function checkImmobilierCategorie() {
+//         const immobilierValue = $('#article_immobilierCategorie').val();
+//         if (!immobilierValue || immobilierValue.trim() === "") {
+//             // Si le champ est vide, videz tous les champs d'input des divs associés
+//             const relatedDivs = $('#appartementforsale, #apartementrental, #houseforsal, #houserentale');
+//             relatedDivs.find(':input').val('');
+//         }
+//     }
+
+//     // Attachez l'événement à chaque modification de la valeur de article_immobilierCategorie
+//     $('#article_immobilierCategorie').on('change', checkImmobilierCategorie);
+// });
+
+
+//pour pouvoir enlevé les catégorie formulaire affiché une fois que nous changeons de catégorie ou sous catégorie
+// function resetDivs() {
+//     $('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv, #immobilierCategorieDiv, #apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv')
+//         .css('display', 'none')
+//         .find(':input').removeAttr('required')
+// }
+
+// $('#article_categorie').on('change', function() {
+//     resetDivs();
+// })
+
+// $('#article_immobilierCategorie').on('change', function() {
+//     resetDivs();
+// })
+
+function resetDivs() {
+    var divsToReset = $('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv, #immobilierCategorieDiv, #apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv');
+
+    // Cachez les divs et supprimez l'attribut "required" pour tous les champs d'entrée requis à l'intérieur
+    divsToReset.hide().find(':input[required]').removeAttr('required');
+
+    // Réinitialisez les champs d'entrée à l'intérieur de ces divs
+    divsToReset.find('input[type="text"], input[type="number"], input[type="email"],input[type="choice"], textarea').val('');
+    divsToReset.find('input[type="radio"], input[type="checkbox"]').prop('checked', false);
+    divsToReset.find('select:not(.exterior-select)').val('').prop('selectedIndex', 0);
+    $("#article_subCategorie").prop("disabled", true);
+    $("#article_voitures_carModel").prop("disabled", true);
+    $("#article_motos_motoModel").prop("disabled", true);
+    $('.exterior-select').val(null).trigger('change'); // Réinitialisez spécifiquement le champ exterior
+}
+
+$('#article_categorie').on('change', function() {
+    resetDivs();
+});
+
+$('form').on('submit', function() {
+    if ($("#article_immobilierCategorie").is(":hidden")) {
+        $("#article_immobilierCategorie").removeAttr('required');
+    }
+});
+
+// All subCategory
+$('#article_subCategorie').on('change', function() {
+    const selectedSubCategory = $(this).val(); 
+    console.log("La sous-catégorie a changé à: " + selectedSubCategory);
+
+    // resetDivs();
+
+
+    // Hide all divs and remove 'required' from all inputs first
+    $('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv,immobilierCategorieDiv').css("display", "none");
+    $('#article_voitures :input, #article_motos :input, #article_caravanning :input, #article_camions :input').removeAttr('required');
+
+
+    switch (selectedSubCategory) {
+        case '1':  // "Voitures"
+            $('#voituresDiv').css("display", "block");
+            $('#article_voitures :input').attr('required', 'required');
+            break;
+        
+        case '2':  // "Motos"
+            $('#motosDiv').css("display", "block");
+            $('#article_motos :input').attr('required', 'required');
+            break;
+
+        case '3':  // "Camion"
+            $('#camionsDiv').css("display", "block");
+            $('#article_camions :input').attr('required', 'required');
+            break;
+
+        case '7':  // "Caravaning"
+            $('#caravanningDiv').css("display", "block");
+            $('#article_caravanning :input').attr('required', 'required');
+            break;
+        case '20':  // "immobilierCatégorie Apartement Vente"
+            $('#immobilierCategorieDiv').css("display", "block");
+            $('#immobilierCategorieDiv :input').attr('required', 'required');
+            break;
+        case '21':  // "immobilierCatégorie Apartement Location"
+            $('#immobilierCategorieDiv').css("display", "block");
+            $('#immobilierCategorieDiv :input').attr('required', 'required');
+            break;
+        }        
+});
+
+//immobilier Catégorie
+$('#article_immobilierCategorie').on('change', function() {
+    $('#apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv,#landForSaleDiv').css("display", "none");
+    $('#article_apartmentForSale :input,#article_apartementRental :input,#article_houseForSale :input,#article_houseRental  :input ').removeAttr('required');
+    const selectedimmobilierCategory = $(this).val(); 
+    console.log("La sous-catégorie a changé à: " + selectedimmobilierCategory);
+
+
+    switch(selectedimmobilierCategory){
+        case '1':  // "Appartements Vente"
+            $('#apartmentForSaleDiv').css("display", "block");
+            $('#article_apartmentForSale :input').attr('required', 'required');
+            break;
+        case '2':  // "Appartements Location"
+            $('#apartementRentalDiv').css("display", "block");
+            $('#article_apartementRental :input').attr('required', 'required');
+            break;
+        case '3':  // "Maison Vente"
+            $('#houseForSaleDiv').css("display", "block");
+            $('#article_houseForSale :input').attr('required', 'required');
+            break;
+        case '4':  // "Maison Location"
+            $('#houseRentalDiv').css("display", "block");
+            $('#article_houseRental  :input').attr('required', 'required');
+            break;
+        case '5':  // "Terrain Vente"
+            $('#landForSaleDiv').css("display", "block");
+            $('#article_landForSale  :input').attr('required', 'required');
+            break;
+    }
+})    
+
+
+//le champ sous-catégorie ne peut être selectioné avant catégorie 
+$(document).ready(function() {
+    
+    // Initially disabling the sub-category and car model dropdowns
+    $("#article_subCategorie").prop("disabled", true);
+    $("#article_voitures_carModel").prop("disabled", true);
+    $("#article_motos_motoModel").prop("disabled", true);
+
+    function toggleDependentDropdown($mainSelect, $dependentSelect) {
+        $mainSelect.on("change", function() {
+            if ($(this).val()) {
+                $dependentSelect.prop("disabled", false);
+            } else {
+                $dependentSelect.prop("disabled", true);
+            }
+        });
+    }
+
+    // Sous catégorie
+    toggleDependentDropdown($("#article_categorie"), $("#article_subCategorie"));
+
+    // Model Auto
+    toggleDependentDropdown($("#article_voitures_makeOfCar"), $("#article_voitures_carModel"));
+
+    // Model Moto
+    toggleDependentDropdown($("#article_motos_makeOfMoto"), $("#article_motos_motoModel"));
+
+});
+
+    </script>
+
+{% endblock %}
+ #}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% extends "base.html.twig" %}
 
 {% block title %}AchatRevente - Nouvelle annonce
@@ -131,6 +534,11 @@
             {{ form_widget(form.houseRental) }}
         </div>
 
+        <div id="landForSaleDiv" style="display:none;">
+            {{ form_label(form.landForSale) }}
+            {{ form_widget(form.landForSale) }}
+        </div>
+
 
 
 
@@ -151,6 +559,18 @@
     const $makeOfMotoSelect = $("#article_motos_makeOfMoto");
     const $motoModelSelect = $("#article_motos_motoModel");
     const $immobilierCategorieSelect = $('#article_immobilierCategorie');
+
+    const resetInputFields = () => {
+    const divsToReset = $("#subCategorieDiv");
+    divsToReset.find('input[type="text"], input[type="number"], input[type="email"],input[type="choice"], textarea').val('');
+    
+    // Réinitialisez les <select> ici
+    // $subCategorieSelect.empty().append($('<option>', {value: "", text: "Choisir une sous-catégorie..."}));
+    $carModelSelect.empty().append($('<option>', {value: "", text: "Choisir un modèle de voiture..."}));
+    $motoModelSelect.empty().append($('<option>', {value: "", text: "Choisir un modèle de moto..."}));
+    $immobilierCategorieSelect.empty().append($('<option>', {value: "", text: "Choisir une catégorie immobilier..."}));
+};
+
 
     const appendOptions = (data, $selectElement, placeholderName) => {
         $selectElement.empty();
@@ -183,24 +603,28 @@
     };
 
     $categorieSelect.on("change", function() {
+         resetInputFields();
         const selectedOption = $(this).find("option:selected").text();
         const url = `/get-subCategories/${$(this).val()}`;
         fetchOptions(url, $subCategorieSelect, selectedOption);
     });
 
     $makeOfCarSelect.on("change", function() {
+         resetInputFields();
         const selectedOption = $(this).find("option:selected").text();
         const url = `/get-carModels/${$(this).val()}`;
         fetchOptions(url, $carModelSelect, selectedOption);
     });
 
     $makeOfMotoSelect.on("change", function() {
+         resetInputFields();
         const selectedOption = $(this).find("option:selected").text();
         const url = `/get-motoModels/${$(this).val()}`;
         fetchOptions(url, $motoModelSelect, selectedOption);
     });
 
     $subCategorieSelect.on('change', function() {
+         resetInputFields();
         const selectedOption = $(this).find("option:selected").text();
         const url = `/get-immobilierCategories/${$(this).val()}`;
         fetchOptions(url, $immobilierCategorieSelect, selectedOption);
@@ -208,16 +632,30 @@
 
 });
 
-//pour pouvoir enlevé les catégorie formulaire affiché une fois que nous changeons de catégorie ou sous catégorie
-function resetDivs() {
-    $('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv, #immobilierCategorieDiv, #apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv')
-        .css('display', 'none')
-        .find(':input').removeAttr('required');
-}
 
+var divsToReset = $('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv, #apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv,#landForSaleDiv');
+
+
+function resetDivs() {
+    // Cachez les divs et supprimez l'attribut "required" pour tous les champs d'entrée requis à l'intérieur
+    divsToReset.hide().find(':input[required]').removeAttr('required');
+
+    // Réinitialisez les champs d'entrée à l'intérieur de ces divs
+    divsToReset.find('input[type="text"], input[type="number"], input[type="email"],input[type="choice"], textarea').val('');
+    divsToReset.find('input[type="radio"], input[type="checkbox"]').prop('checked', false);
+    divsToReset.find('select:not(.exterior-select)').val('').prop('selectedIndex', 0);
+
+    
+    // Traitez #immobilierCategorieDiv séparément
+    $("#immobilierCategorieDiv").hide();  // Cachez la div si nécessaire, mais ne réinitialisez pas son contenu
+
+
+
+}
 $('#article_categorie').on('change', function() {
     resetDivs();
-})
+});
+
 
 // All subCategory
 $('#article_subCategorie').on('change', function() {
@@ -230,7 +668,6 @@ $('#article_subCategorie').on('change', function() {
     // Hide all divs and remove 'required' from all inputs first
     $('#voituresDiv, #motosDiv, #camionsDiv, #caravanningDiv,immobilierCategorieDiv').css("display", "none");
     $('#article_voitures :input, #article_motos :input, #article_caravanning :input, #article_camions :input').removeAttr('required');
-
 
     switch (selectedSubCategory) {
         case '1':  // "Voitures"
@@ -265,11 +702,13 @@ $('#article_subCategorie').on('change', function() {
 
 //immobilier Catégorie
 $('#article_immobilierCategorie').on('change', function() {
-    $('#apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv').css("display", "none");
-    $('#article_apartmentForSale :input,#article_apartementRental :input,#article_houseForSale :input,#article_houseRental  :input ').removeAttr('required');
+    $('#apartmentForSaleDiv, #apartementRentalDiv,#houseForSaleDiv,#houseRentalDiv,#landForSaleDiv ').css("display", "none");
+    $('#article_apartmentForSale :input,#article_apartementRental :input,#article_houseForSale :input,#article_houseRental  :input,#article_landForSale  :input ').removeAttr('required');
     const selectedimmobilierCategory = $(this).val(); 
     console.log("La sous-catégorie a changé à: " + selectedimmobilierCategory);
 
+    resetDivs();
+    $("#immobilierCategorieDiv").show();
 
     switch(selectedimmobilierCategory){
         case '1':  // "Appartements Vente"
@@ -287,6 +726,11 @@ $('#article_immobilierCategorie').on('change', function() {
         case '4':  // "Maison Location"
             $('#houseRentalDiv').css("display", "block");
             $('#article_houseRental  :input').attr('required', 'required');
+            break;
+
+         case '5':  // "Maison Location"
+            $('#landForSaleDiv').css("display", "block");
+            $('#article_landForSale  :input').attr('required', 'required');
             break;
     }
 })    
