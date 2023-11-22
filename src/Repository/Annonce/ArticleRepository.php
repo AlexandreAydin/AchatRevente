@@ -39,6 +39,7 @@ class ArticleRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
     public function paginationQuery()
     {
         return $this->createQueryBuilder('a')
@@ -46,6 +47,57 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ;
     }
+
+
+
+    public function findWithSearch($search)
+    {
+        // $query = $this->createQueryBuilder('a')
+        // ->orderBy('a.id', 'DESC');
+
+        $categorieVehiculesId = 1; // Remplacez par la bonne valeur
+
+        $query = $this->createQueryBuilder('a')
+        ->leftJoin('a.categorie', 'c') // Jointure sur 'categorie'
+        ->leftJoin('a.voitures', 'v') // Jointure sur 'voitures'
+        ->leftJoin('a.camions', 'cam')// Jointure sur 'camions'
+        ->where('c.id = :categorieId')
+        ->setParameter('categorieId', $categorieVehiculesId)
+        ->addSelect('a.title', 'a.price', 'v.mileage') // Sélection des champs nécessaires
+        ->orderBy('a.id', 'DESC');
+    
+        // Conditions de prix
+        if ($search->getMinPrice()) {
+            $query = $query->andWhere('a.price >= :minPrice')
+                ->setParameter('minPrice', $search->getMinPrice());
+        }
+        
+        if ($search->getMaxPrice()) {
+            $query = $query->andWhere('a.price <= :maxPrice')
+                ->setParameter('maxPrice', $search->getMaxPrice());
+        }
+        
+        // Conditions de kilométrage
+        if ($search->getMinMileage()) {
+            $query = $query->andWhere('v.mileage >= :minMileage OR cam.mileage >= :minMileage')
+                ->setParameter('minMileage', $search->getMinMileage());
+        }
+        
+        if ($search->getMaxMileage()) {
+            $query = $query->andWhere('v.mileage <= :maxMileage OR cam.mileage <= :maxMileage')
+                ->setParameter('maxMileage', $search->getMaxMileage());
+        }
+        
+        // Filtrage par catégories si nécessaire
+        if ($search->getCategories()) {
+            $query = $query->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->getCategories());
+        }
+        
+        return $query->getQuery()->getResult();
+    
+    }
+
 
 //    /**
 //     * @return Article[] Returns an array of Article objects

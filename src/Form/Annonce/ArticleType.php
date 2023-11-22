@@ -111,6 +111,7 @@ class ArticleType extends AbstractType
         ->add('immobilierCategorie', EntityType::class, [
             'class' => ImmobilierCategorie::class,
             'choice_label' => 'name',
+            'required' => false,
             'placeholder' => 'Sélectionnez Sous Catégorie',
         ])
         //Vehicule start
