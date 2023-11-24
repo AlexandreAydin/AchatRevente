@@ -1,4 +1,5 @@
-import './styles/app.css';
-import './bootstrap';
+import './styles/app.scss';
 
-// console.log('salut')
+import { Tooltip, Toast, Popover } from 'bootstrap';
+
+console.log('salit')

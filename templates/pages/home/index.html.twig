@@ -5,59 +5,143 @@
 {% endblock %}
 
 {% block body %}
-
-    {# Parcourez et affichez vos articles #}
-    <ul>
     <div class="section">
-<div class="container">
-    <div class="row">
-        <div class="col-lg-9">
-            <div class="row shop_container">
-                {% if not pagination.getTotalItemCount() %}
-                    <p>Désolé, aucun produit ne correspond au résultat de votre recherche</p>
-                {% endif %}
-                {% for article in pagination %}
-                    {# Affichez les détails de chaque article ici #}
-                    {{ article.title }}
-                    {{ article.price }}
-                {% endfor %}
+        <div class="container">
+            <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
+                <div class="sidebar">
+                    {{ form_start(search) }}
+                    <div class="widget">
+                        <h5 class="widget_title">Categories</h5>
+                        {{ form_row(search.categories) }}
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget_title text-center">Prix</h5>
+                        <div class="form-row d-flex">
+                            <div class="col-md-6 mx-2">
+                                {{ form_row(search.minPrice) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(search.maxPrice) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget_title text-center">Kilométrage</h5>
+                        <div class="form-row d-flex">
+                            <div class="col-md-6 mx-2">
+                                {{ form_row(search.minMileage) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(search.maxMileage) }}
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn- btn-border-fill btn-block">Search</button>
+                    {{ form_end(search) }}
+                </div>
             </div>
-        </div>
-        <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
-            <div class="sidebar">
-                {{ form_start(search) }}
-                <div class="widget">
-                    <h5 class="widget_title">Categories</h5>
-                    {{ form_row(search.categories) }}
-                </div>
-                <div class="widget">
-                    <h5 class="widget_title text-center">Prix</h5>
-                    <div class="form-row d-flex">
-                        <div class="col-md-6 mx-2">
-                            {{ form_row(search.minPrice) }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(search.maxPrice) }}
-                        </div>
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row shop_container">
+                        {# {% if not pagination.getTotalItemCount() %}
+                            <p>Désolé, aucun produit ne correspond au résultat de votre recherche</p>
+                        {% endif %}
+                        {% for item in pagination %}
+                        {% if item is iterable %}
+                            {% set article = item[0] %}
+                        {% else %}
+                            {% set article = item %}
+                        {% endif %}
+
+                        {% if article.images is defined and article.images|length > 0 %}
+                            {% for image in article.images|slice(0, 1) %}
+                                <a href="{{ path('app_ad.show', {'id': article.id}) }}">
+                                    <img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if article.id is defined %}
+                            <h2 class="m-4 pt-4">
+                                <a href="{{ path('app_ad.show', {'id': article.id}) }}" class="text-decoration-none">{{ article.title }}</a>
+                            </h2>
+                        {% endif %}
+{% endfor %} #}
+
+
+
+
+
+
+                        {% if not pagination.getTotalItemCount() %}
+                            <p>Désolé, aucun produit ne correspond au résultat de votre recherche.</p>
+                        {% endif %}
+                        {% for item in pagination %}
+                            {% if item is iterable %}
+                                {% set article = item[0] %}
+                            {% else %}
+                                {% set article = item %}
+                            {% endif %}
+                            <article >
+                                    <div class="d-flex">
+                                        <div>
+                                            {% if article.images is defined and article.images|length > 0 %}
+                                                {% for image in article.images|slice(0, 1) %}
+                                                    <a href="{{ path('app_ad.show', {'id': article.id}) }}">
+                                                        <img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
+                                                    </a>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="">
+                                            {% if article.id is defined %}
+                                                <h2 class="m-4 pt-4">
+                                                    <a href="{{ path('app_ad.show', {'id': article.id}) }}" class="text-decoration-none">{{ article.title }}</a>
+                                                </h2>
+                                            {% endif %}
+                                                 <div class="">
+                                                {% if article.voitures is defined and article.voitures is not null %}
+                                                    <div class="d-flex">
+                                                        <div class="mx-4">
+                                                            <p>Année</p>
+                                                            <p>{{ article.voitures.annee }}</p>
+                                                        </div>
+                                                        <div class="mx-4">
+                                                            <p>Kilométrage</p>
+                                                            <p>{{ article.voitures.mileage }}</p>
+                                                        </div>
+                                                        <div class="mx-4">
+                                                            <p>Boîte de Vitesse</p>
+                                                            <p>{{ article.voitures.gearbox }}</p>
+                                                        </div>
+                                                        <div class="mx-4">
+                                                            <p>Carburant</p>
+                                                            <p>{{ article.voitures.carburant }}</p>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="d-flex">
+                                                    {% if article.createdAt is defined %}
+                                                        <p class="mx-4">{{ article.createdAt|date('d M Y') }}</p>
+                                                    {% endif %}
+                                                    {% if article.city is defined %}
+                                                        <div>
+                                                            <p><i class="fa fa-map-marker-alt"></i> {{ article.city }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </article>
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="widget">
-                    <h5 class="widget_title text-center">Kilométrage</h5>
-                    <div class="form-row d-flex">
-                        <div class="col-md-6 mx-2">
-                            {{ form_row(search.minMileage) }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(search.maxMileage) }}
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-border-fill btn-block">Search</button>
-                {{ form_end(search) }}
             </div>
         </div>
     </div>
-</div>
+        </div>
+    </div>
 
 {# Affichez la pagination #}
 <div class="pagination">
@@ -65,17 +149,6 @@
 </div>
 
 
-
-
-
-        {% for article in articles %}
-            <li>
-                {{ article.title }}
-                {{ article.price }} {# Remplacez 'title' par le champ approprié de votre entité Article #}
-                {# Vous pouvez ajouter d'autres champs de l'article comme vous le souhaitez #}
-            </li>
-        {% endfor %}
-    </ul>
 
 
 {% endblock %}

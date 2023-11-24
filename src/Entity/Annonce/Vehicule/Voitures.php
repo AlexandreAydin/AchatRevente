@@ -22,7 +22,7 @@ class Voitures
     private ?CarModel $carModel = null;
 
     #[ORM\Column(type: "string", nullable: true)]
-    private ?int $Annee = null;
+    private ?int $annee = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $carburant = null;
@@ -58,12 +58,12 @@ class Voitures
 
     public function getAnnee(): ?int
     {
-        return $this->Annee;
+        return $this->annee;
     }
 
-    public function setAnnee(int $Annee): static
+    public function setAnnee(int $annee): static
     {
-        $this->Annee = $Annee;
+        $this->annee = $annee;
 
         return $this;
     }
