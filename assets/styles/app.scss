@@ -1,3 +1,127 @@
 body {
     background-color: lightgray;
 }
+
+/*******************************
+* ! Home index.html.twig Start
+*******************************/
+// .section-container {
+//     margin-top: 40px; /* Centre horizontalement */
+// }
+
+ article{
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border-top: solid 1px rgb(120, 120, 120);
+}
+
+.section-articles img{
+    border-radius: 25px;
+}
+
+// .shop_container h2 {
+//     margin-top: 40px;
+//     margin-left: 30px;
+//     text-transform:capitalize
+// }
+
+// .shop_container h3 {
+//     margin-left: 30px;
+// }
+
+// .shop_container .articles-infos {
+//     margin-left: 30px;
+// }
+
+// .shop_container .articles-infos p {
+//     margin-left: 0.5rem;
+// }
+
+// .shop_container .articles-infos-bottom {
+//    margin-left: -22rem;
+// }
+
+
+// .articles-infos-bottom {
+//     width: 100%; /* pour s'assurer qu'il occupe toute la largeur disponible */
+// }
+
+.div-parent-personnalisee {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 250px; /* Hauteur minimale */
+    width: 768px; /* Largeur fixe */
+}
+
+.article-price{
+    margin-top: -40px;
+}
+
+.articles-infos{
+    margin-top: -45px;
+}
+
+.articles-infos-bottom p :nth-child(1){
+    margin-left: 150px;
+}
+
+
+@media  screen and (max-width: 1200px) {
+    .div-parent-personnalisee {
+        margin-left: 45px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .div-parent-personnalisee {
+        margin-left: 110px;
+    }
+}
+
+@media screen and (max-width: 769px){
+    .section-articles img {
+        height: 180px;
+    }
+
+    .section-articles .div-parent-personnalisee {
+        margin-left: 25px;
+        margin-top: 0px;
+        display: flex;
+        flex-direction: column;
+        width: 500px;
+        min-height: 200px; /* Hauteur minimale */
+    }
+
+    .article-price{
+        margin-top: -5px;
+        margin-bottom: 15px;
+    }
+
+    .section-articles .voitures-info,
+    .section-articles .camions-info{
+        display: none;
+    }
+
+    .articles-infos-bottom{
+        display: flex;
+        flex-direction:row;
+        margin-right: -90px;
+    }
+
+    .articles-infos-bottom p :nth-child(1){
+        margin-left: 15px;
+    }
+    
+}
+
+
+@media screen and (max-width: 575px){
+    .section-articles img {
+        margin-left: 25px;
+    }
+}
+
+/*******************************
+* ! Home index.html.twig End
+*******************************/

@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block body %}
-    <div class="section">
-        <div class="container">
+    {# <div class="section section-articles">
+        <div class="section-container container">
             <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
                 <div class="sidebar">
                     {{ form_start(search) }}
@@ -43,36 +43,6 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row shop_container">
-                        {# {% if not pagination.getTotalItemCount() %}
-                            <p>Désolé, aucun produit ne correspond au résultat de votre recherche</p>
-                        {% endif %}
-                        {% for item in pagination %}
-                        {% if item is iterable %}
-                            {% set article = item[0] %}
-                        {% else %}
-                            {% set article = item %}
-                        {% endif %}
-
-                        {% if article.images is defined and article.images|length > 0 %}
-                            {% for image in article.images|slice(0, 1) %}
-                                <a href="{{ path('app_ad.show', {'id': article.id}) }}">
-                                    <img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
-                                </a>
-                            {% endfor %}
-                        {% endif %}
-
-                        {% if article.id is defined %}
-                            <h2 class="m-4 pt-4">
-                                <a href="{{ path('app_ad.show', {'id': article.id}) }}" class="text-decoration-none">{{ article.title }}</a>
-                            </h2>
-                        {% endif %}
-{% endfor %} #}
-
-
-
-
-
-
                         {% if not pagination.getTotalItemCount() %}
                             <p>Désolé, aucun produit ne correspond au résultat de votre recherche.</p>
                         {% endif %}
@@ -83,51 +53,62 @@
                                 {% set article = item %}
                             {% endif %}
                             <article >
-                                    <div class="d-flex">
+                                    <div class="d-flex article-container">
                                         <div>
                                             {% if article.images is defined and article.images|length > 0 %}
                                                 {% for image in article.images|slice(0, 1) %}
                                                     <a href="{{ path('app_ad.show', {'id': article.id}) }}">
-                                                        <img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
+                                                        <img src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
                                                     </a>
                                                 {% endfor %}
                                             {% endif %}
                                         </div>
-                                        <div class="">
+                                        <div>
                                             {% if article.id is defined %}
-                                                <h2 class="m-4 pt-4">
+                                                <h2>
                                                     <a href="{{ path('app_ad.show', {'id': article.id}) }}" class="text-decoration-none">{{ article.title }}</a>
                                                 </h2>
+                                                <h3>{{article.price}} €</h3>
                                             {% endif %}
-                                                 <div class="">
+                                                <div class="articles-infos">
                                                 {% if article.voitures is defined and article.voitures is not null %}
                                                     <div class="d-flex">
-                                                        <div class="mx-4">
-                                                            <p>Année</p>
-                                                            <p>{{ article.voitures.annee }}</p>
+                                                        <div>
+                                                            <p>Année <br>
+                                                            {{ article.voitures.annee }} </p>
                                                         </div>
-                                                        <div class="mx-4">
-                                                            <p>Kilométrage</p>
-                                                            <p>{{ article.voitures.mileage }}</p>
+                                                        <div>
+                                                            <p>- Kilométrage<br>
+                                                            - {{ article.voitures.mileage }} km</p>
                                                         </div>
-                                                        <div class="mx-4">
-                                                            <p>Boîte de Vitesse</p>
-                                                            <p>{{ article.voitures.gearbox }}</p>
+                                                        <div>
+                                                            <p>- Boîte de Vitesse<br>
+                                                            - {{ article.voitures.gearbox }}</p>
                                                         </div>
-                                                        <div class="mx-4">
-                                                            <p>Carburant</p>
-                                                            <p>{{ article.voitures.carburant }}</p>
+                                                        <div>
+                                                            <p>- Carburant<br>
+                                                            - {{ article.voitures.carburant }}</p>
                                                         </div>
                                                     </div>
                                                 {% endif %}
-                                                <div class="d-flex">
+                                                    {% if article.camions is defined and article.camions is not null %}
+                                                    <div class="d-flex">
+                                                        <div>
+                                                            <p> Année<br>
+                                                            {{ article.camions.annee }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p>- Kilométrage<br>
+                                                            - {{ article.camions.mileage }} km</p>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="d-flex articles-infos-bottom align-items-end">
                                                     {% if article.createdAt is defined %}
-                                                        <p class="mx-4">{{ article.createdAt|date('d M Y') }}</p>
+                                                        <p>{{ article.createdAt|date('d M Y') }}</p>
                                                     {% endif %}
                                                     {% if article.city is defined %}
-                                                        <div>
-                                                            <p><i class="fa fa-map-marker-alt"></i> {{ article.city }}</p>
-                                                        </div>
+                                                            <p><i class="fa fa-map-marker-alt"></i> {{article.postCode}} {{ article.city }}</p>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -141,8 +122,136 @@
         </div>
     </div>
         </div>
-    </div>
+    </div> #}
 
+
+
+
+   <main class="container section-articles">
+        <div class="row">
+            <div class="">
+                <h3 class="pb-4 mb-4 fst-italic border-bottom"> Article récents</h3>
+                <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
+                <div class="sidebar">
+                    {{ form_start(search) }}
+                    <div class="widget">
+                        <h5 class="widget_title">Categories</h5>
+                        {{ form_row(search.categories) }}
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget_title text-center">Prix</h5>
+                        <div class="form-row d-flex">
+                            <div class="col-md-6 mx-2">
+                                {{ form_row(search.minPrice) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(search.maxPrice) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <h5 class="widget_title text-center">Kilométrage</h5>
+                        <div class="form-row d-flex">
+                            <div class="col-md-6 mx-2">
+                                {{ form_row(search.minMileage) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(search.maxMileage) }}
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn mb-4 mt-4 btn-border-fill btn-block">Recherche</button>
+                    {{ form_end(search) }}
+                </div>
+            </div>
+                <div id="article-list">
+                         {% if not pagination.getTotalItemCount() %}
+                            <p>Désolé, aucun produit ne correspond au résultat de votre recherche.</p>
+                        {% endif %}
+                        {% for item in pagination %}
+                            {% if item is iterable %}
+                                {% set article = item[0] %}
+                            {% else %}
+                                {% set article = item %}
+                            {% endif %}
+                        <article class="col-md-8">
+                            <div class="row">
+                                <div class="col-sm-5 order-0 order-sm-0">
+                                            {% if article.images is defined and article.images|length > 0 %}
+                                                {% for image in article.images|slice(0, 1) %}
+                                                    <a href="{{ path('app_ad.show', {'id': article.id}) }}">
+                                                        <img src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
+                                                    </a>
+                                                {% endfor %}
+                                            {% endif %}
+                                </div>
+                                <div class="col-sm-7 order-1 mt-3 mt-sm-0">
+                                    <div>
+                                        <div class="div-parent-personnalisee">
+                                            {% if article.id is defined %}
+                                                <h2>
+                                                    <a href="{{ path('app_ad.show', {'id': article.id}) }}" class="text-decoration-none">{{ article.title }}</a>
+                                                </h2>
+                                                <h3 class="article-price">{{article.price}} €</h3>
+                                            {% endif %}
+                                            <div class="articles-infos">
+                                                {% if article.voitures is defined and article.voitures is not null %}
+                                                    <div class="d-flex">
+                                                        <div>
+                                                            <p><span class="voitures-info">Année</span> <br>
+                                                            {{ article.voitures.annee }} </p>
+                                                        </div>
+                                                        <div>
+                                                            <p><span class="voitures-info">- Kilométrage</span><br>
+                                                            - {{ article.voitures.mileage }} km</p>
+                                                        </div>
+                                                        <div>
+                                                            <p><span class="voitures-info">- Boîte de Vitesse</span><br>
+                                                            - {{ article.voitures.gearbox }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p><span class="voitures-info">- Carburant</span><br>
+                                                            - {{ article.voitures.carburant }}</p>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                    {% if article.camions is defined and article.camions is not null %}
+                                                    <div class="d-flex">
+                                                        <div>
+                                                            <p><span class="camions-info">Année</span><br>
+                                                            {{ article.camions.annee }} - </p>
+                                                        </div>
+                                                        <div>
+                                                            <p><span class="camions-info"> - Kilométrage </span><br>
+                                                             {{ article.camions.mileage }} km</p>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="d-flex articles-infos-bottom align-items-end">
+                                                {% if article.createdAt is defined %}
+                                                    <p>{{ article.createdAt|date('d M Y') }}</p>
+                                                {% endif %}
+                                                {% if article.city is defined %}
+                                                        <p><i class="fa fa-map-marker-alt"></i> {{article.postCode}} {{ article.city }}</p>
+                                                {% endif %}
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                </div>
+            </div>
+
+            {# <div class="col-md-4">
+                <div class="position-sticky" sytle="top: 2rem;">
+                      {% include 'widget/_categories.html.twig' %}
+                </div>
+            </div> #}
+        </div>    
+    </main>
 {# Affichez la pagination #}
 <div class="pagination">
     {{ knp_pagination_render(pagination) }}

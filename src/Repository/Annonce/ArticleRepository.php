@@ -49,54 +49,102 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
 
-
     public function findWithSearch($search)
     {
-        // $query = $this->createQueryBuilder('a')
-        // ->orderBy('a.id', 'DESC');
-
-        $categorieVehiculesId = 1; // Remplacez par la bonne valeur
-
+        // Création de la requête de base
         $query = $this->createQueryBuilder('a')
-        ->leftJoin('a.categorie', 'c') // Jointure sur 'categorie'
-        ->leftJoin('a.voitures', 'v') // Jointure sur 'voitures'
-        ->leftJoin('a.camions', 'cam')// Jointure sur 'camions'
-        ->where('c.id = :categorieId')
-        ->setParameter('categorieId', $categorieVehiculesId)
-        ->addSelect('a.title', 'a.price', 'v.mileage') // Sélection des champs nécessaires
-        ->orderBy('a.id', 'DESC');
+            ->leftJoin('a.categorie', 'c')
+            ->leftJoin('a.voitures', 'v') // Jointure sur 'voitures'
+            ->leftJoin('a.camions', 'cam') // Jointure sur 'camions'
+            ->addSelect('a.title', 'a.price', 'v.mileage', 'cam.mileage') // Sélection des champs nécessaires
+            ->orderBy('a.id', 'DESC');
+    
+        // Filtrage par catégorie
+        if ($search->getCategories() && !empty($search->getCategories())) {
+            $query->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $search->getCategories());
+        }
     
         // Conditions de prix
         if ($search->getMinPrice()) {
-            $query = $query->andWhere('a.price >= :minPrice')
+            $query->andWhere('a.price >= :minPrice')
                 ->setParameter('minPrice', $search->getMinPrice());
         }
-        
+    
         if ($search->getMaxPrice()) {
-            $query = $query->andWhere('a.price <= :maxPrice')
+            $query->andWhere('a.price <= :maxPrice')
                 ->setParameter('maxPrice', $search->getMaxPrice());
         }
-        
-        // Conditions de kilométrage
+    
+        // Conditions de kilométrage pour les voitures
         if ($search->getMinMileage()) {
-            $query = $query->andWhere('v.mileage >= :minMileage OR cam.mileage >= :minMileage')
+            $query->andWhere('(v.mileage >= :minMileage OR cam.mileage >= :minMileage)')
                 ->setParameter('minMileage', $search->getMinMileage());
         }
-        
+    
         if ($search->getMaxMileage()) {
-            $query = $query->andWhere('v.mileage <= :maxMileage OR cam.mileage <= :maxMileage')
+            $query->andWhere('(v.mileage <= :maxMileage OR cam.mileage <= :maxMileage)')
                 ->setParameter('maxMileage', $search->getMaxMileage());
         }
-        
-        // Filtrage par catégories si nécessaire
-        if ($search->getCategories()) {
-            $query = $query->andWhere('c.id IN (:categories)')
-                ->setParameter('categories', $search->getCategories());
-        }
-        
-        return $query->getQuery()->getResult();
     
+        return $query->getQuery()->getResult();
     }
+    
+
+
+    // public function findWithSearch($search, $categorieId = null)
+    // {
+    //     $query = $this->createQueryBuilder('a')
+    //     ->leftJoin('a.categorie', 'c');
+
+    //         if ($categorieId !== null) {
+    //             $query->where('c.id = :categorieId')
+    //                   ->setParameter('categorieId', $categorieId);
+    //         }
+        
+    
+    //     // Dynamiser les jointures et les sélections en fonction de la catégorie
+    //     switch ($categorieId) {
+    //         case 1: // Pour la catégorie des voitures
+    //             $query->leftJoin('a.voitures', 'v')
+    //                 ->addSelect('a.title', 'a.price', 'v.mileage');
+    //             break;
+    //         case 2:  $query->leftJoin('a.immobilier', 'i')
+    //                         ->addSelect('a.title', 'a.price',);
+    //             break;
+    //         // Ajoutez d'autres cas pour d'autres catégories si nécessaire
+    //     }
+    
+    //     // Conditions de prix
+    //     if ($search->getMinPrice()) {
+    //         $query->andWhere('a.price >= :minPrice')
+    //             ->setParameter('minPrice', $search->getMinPrice());
+    //     }
+    //     if ($search->getMaxPrice()) {
+    //         $query->andWhere('a.price <= :maxPrice')
+    //             ->setParameter('maxPrice', $search->getMaxPrice());
+    //     }
+    
+    //     // Conditions de kilométrage
+    //     // Assurez-vous que ces conditions sont pertinentes pour toutes les catégories
+    //     if ($search->getMinMileage()) {
+    //         $query->andWhere('v.mileage >= :minMileage')
+    //             ->setParameter('minMileage', $search->getMinMileage());
+    //     }
+    //     if ($search->getMaxMileage()) {
+    //         $query->andWhere('v.mileage <= :maxMileage')
+    //             ->setParameter('maxMileage', $search->getMaxMileage());
+    //     }
+    
+    //     // Filtrage par catégories si nécessaire
+    //     if ($search->getCategories()) {
+    //         $query->andWhere('c.id IN (:categories)')
+    //             ->setParameter('categories', $search->getCategories());
+    //     }
+    
+    //     return $query->getQuery()->getResult();
+    // }
+    
 
 
 //    /**
