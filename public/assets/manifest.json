@@ -1,6 +1,17 @@
 {
-  "assets/app.css": "/assets/app.css",
   "assets/app.js": "/assets/app.js",
   "assets/runtime.js": "/assets/runtime.js",
-  "assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js.js": "/assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js.js"
+  "assets/app.css": "/assets/app.css",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_bootstrap_dist_js_bootstrap_js-n-3e2dd9.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_bootstrap_dist_js_bootstrap_js-n-3e2dd9.js",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_dropzone_dist_dropzone_mjs.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_dropzone_dist_dropzone_mjs.js",
+  "assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js.js": "/assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js.js",
+  "assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js-node_modules_dropzone_dist_dropzone_mjs.js": "/assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js-node_modules_dropzone_dist_dropzone_mjs.js",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_bootstrap_dist_js_bootstrap_js.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_bootstrap_dist_js_bootstrap_js.js",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_mjs.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_mjs.js",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_bootstrap_dist_js_bootstrap_js-n-113daf.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_css-node_modules_bootstrap_dist_js_bootstrap_js-n-113daf.js",
+  "assets/node_modules_dropzone_dist_dropzone_css.css": "/assets/node_modules_dropzone_dist_dropzone_css.css",
+  "assets/node_modules_dropzone_dist_dropzone_css.js": "/assets/node_modules_dropzone_dist_dropzone_css.js",
+  "assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js-node_modules_core-js_modules_es_object_to-027e5b.js": "/assets/vendors-node_modules_bootstrap_dist_js_bootstrap_js-node_modules_core-js_modules_es_object_to-027e5b.js",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_js-node_modules_dropzone_dist_dropzone_css-node_m-e67662.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_js-node_modules_dropzone_dist_dropzone_css-node_m-e67662.js",
+  "assets/vendors-node_modules_dropzone_dist_dropzone_js-node_modules_bootstrap_dist_js_bootstrap_js.js": "/assets/vendors-node_modules_dropzone_dist_dropzone_js-node_modules_bootstrap_dist_js_bootstrap_js.js"
 }

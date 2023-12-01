@@ -11,6 +11,7 @@ use App\Service\PictureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,105 +33,59 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/ajouter-une-nouvelle-annonce', name: 'app_new.ad')]
-    public function new_add(
-        Request $request,
-        EntityManagerInterface $manager,
-        PictureService $pictureService
-    ): Response
+    #[Route('/upload-images', name: 'image_upload', methods: ['POST'])]
+    public function uploadImages(Request $request, PictureService $pictureService): JsonResponse
     {
-       
-        $article= new Article();
+        $uploadedFiles = $request->files->all();
+        $imageReferences = $request->getSession()->get('image_references', []);
+    
+        foreach ($uploadedFiles as $file) {
+            if (!($file instanceof UploadedFile)) {
+                continue;
+            }
+            $resizedImageName = $pictureService->add($file, '', 300, 300);
+            $imageReferences[] = $resizedImageName;
+        }
+        
+        // Stockez les références d'image dans la session ou renvoyez-les directement
+        // Par exemple, en utilisant la session :
+        $request->getSession()->set('image_references', $imageReferences);
+    
+        return new JsonResponse(['message' => 'Images uploaded successfully', 'references' => $imageReferences], 200);
+        
+    }
+    
+
+    #[Route('/ajouter-une-nouvelle-annonce', name: 'app_new.ad', methods: ['GET', 'POST'])]
+    public function new_add(Request $request, EntityManagerInterface $manager, PictureService $pictureService): Response 
+    {
+        $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $images = $form->get('images')->getData();
-            foreach ($images as $image) {
-                if (!($image instanceof UploadedFile)) {
-                    continue;
-                }
-
-                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-
-                // Add a check here to make sure $imageName is not an empty string
-                if (!$imageName || trim($imageName) == '') {
-                    throw new \Exception('Image name not generated or empty');
-                }
-
+            $article->setUser($this->getUser()); // Assurez-vous que getUser renvoie l'utilisateur correct
+            $manager->persist($article);
+            $manager->flush(); // Flush ici pour que l'article obtienne un ID
+            
+            $imageReferences = $request->getSession()->get('image_references', []);
+            
+            foreach ($imageReferences as $imageName) {
                 $img = new ArticleImage();
                 $img->setName($imageName);
-
-                // Redimensionner l'image à 300x300 pixels
-                $resizedImageName = $pictureService->add($image, 300, 300);
-                $img->setName($resizedImageName);
-
-                $article->addImage($img);
+                $img->setArticle($article); // Associez l'image à l'article
+                $manager->persist($img);    // Persistez chaque image
             }
-
-            $article->setUser($this->getUser());
-
-            $manager->persist($article);
-            $manager->flush();
-
-            $this->addFlash(
-                'success',
-                'Votre annonce a été créée avec succès!'
-            );
+            $manager->flush(); // Flush après la boucle pour enregistrer toutes les images
+        
+            // Effacer les références d'image de la session
+            $request->getSession()->remove('image_references');
+            $this->addFlash('success', 'Votre annonce a été créée avec succès!');
             return $this->redirectToRoute('app_ad');
         }
 
-        return $this->render('pages/article/new.html.twig', [
-            'form' => $form->createView()
-        ]);
+        return $this->render('pages/article/new.html.twig', ['form' => $form->createView()]);
     }
-
-    // #[Route('/ajouter-une-nouvelle-annonce', name: 'app_new.ad')]
-    // public function new_add(Request $request,
-    // EntityManagerInterface $manager,
-    // PictureService $pictureService,
-    // ValidatorInterface $validator): Response
-    // {
-    //     $article = new Article();
-    //     $form = $this->createForm(ArticleType::class, $article);
-    //     $form->handleRequest($request);
-        
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $images = $form->get('images')->getData();
-    //         foreach ($images as $image) {
-    //             if (!($image instanceof UploadedFile)) {
-    //                 continue;
-    //             }
-
-    //             $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-    //             if (!$imageName || trim($imageName) == '') {
-    //                 throw new \Exception('Image name not generated or empty');
-    //             }
-
-    //             // Redimensionner l'image à 300x300 pixels
-    //             $resizedImageName = $pictureService->add($image, 300, 300);
-                
-    //             $img = new ArticleImage();
-    //             $img->setName($resizedImageName);
-    //             $article->addImage($img);
-    //         }
-
-
-
-
-    //         $article->setUser($this->getUser());
-    //         $manager->persist($article);
-    //         $manager->flush();
-
-    //         $this->addFlash('success', 'Votre annonce a été créée avec succès!');
-    //         return $this->redirectToRoute('app_ad');
-    //     }
-
-    //     return $this->render('pages/article/new.html.twig', ['form' => $form->createView()]);
-    // }
-
-
-    
 
     #[Route('/annonce/{id}', name:"app_ad.show")]
     public function show(Article $article): Response

@@ -460,16 +460,11 @@ $(document).ready(function() {
 			</div>
 		</div>
 
-		<div class="form-group" style="margin-bottom:10px;">
-			<h2>Ajouter des images</h2>
-			<h4>ctrl + click gauche souris pour séléctioner plusieurs photo</h4>
-			{{ form_label(form.images) }}
-			{{ form_widget(form.images, {'attr': {'class': 'image-collection', 'data-index': form.images|length}}) }}
-			<div class="form-error">
-				{{ form_errors(form.images) }}
-			</div>
-		</div>
-        
+        <h2>Ajouter des images</h2>
+        <div class="dropzone dropzone-container" id="monDropzone" style="margin-bottom:10px;">
+            {{ form_widget(form.images, {'attr': {'class': 'image-collection', 'data-index': form.images|length}}) }}
+        </div>
+
         <div class="form-group">
 			{{ form_label(form.categorie) }}
 			{{ form_widget(form.categorie) }}
@@ -486,7 +481,7 @@ $(document).ready(function() {
 			</div>
 		</div> 
 
-         <div id="immobilierCategorieDiv" style="display:none;">
+        <div id="immobilierCategorieDiv" style="display:none;">
 			{{ form_label(form.immobilierCategorie) }}
 			{{ form_widget(form.immobilierCategorie) }}
 			<div class="form-error">
@@ -547,8 +542,6 @@ $(document).ready(function() {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	 <script>
-
-
 
 //permet de choisir les options selon les associations 
    $(document).ready(function() {

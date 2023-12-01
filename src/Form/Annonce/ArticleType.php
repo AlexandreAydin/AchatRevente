@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\All;
-
+use Symfony\UX\Dropzone\Form\DropzoneType;
 
 class ArticleType extends AbstractType
 {
@@ -80,7 +80,7 @@ class ArticleType extends AbstractType
                 'placeholder' => 'Entrez votre ville'
             ]
         ])
-        ->add('images', FileType::class, [
+        ->add('images', DropzoneType::class, [
             'label' => false,
             'multiple' => true,
             'mapped' => false,

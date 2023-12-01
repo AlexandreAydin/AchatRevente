@@ -180,7 +180,7 @@
                                             {% if article.images is defined and article.images|length > 0 %}
                                                 {% for image in article.images|slice(0, 1) %}
                                                     <a href="{{ path('app_ad.show', {'id': article.id}) }}">
-                                                        <img src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" />
+                                                        <img src="{{ asset('uploads/images300/mini/300x300-' ~ image.name) | imagine_filter('thumbnail') }}" />
                                                     </a>
                                                 {% endfor %}
                                             {% endif %}

@@ -18,14 +18,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
 
     <div> 
+    <p>Nombre d'images : {{ article.images|length }}</p>
         <div class="image-gallery">
             {% for image in article.images|slice(0, 3) %}
-                <a href="{{ asset('uploads/images300/' ~ image.name) }}" data-fancybox="gallery"><img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
+                <a href="{{ asset('uploads/images300/' ~ image.name) }}" data-fancybox="gallery"><img class="m-4 p-4" src="{{ asset('uploads/images300/mini/300x300-' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
             {% endfor %}
             
             <div id="moreImages" style="display: none;">
                 {% for image in article.images|slice(3) %}
-                    <a href="{{ asset('uploads/images300/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/images300/mini/300x250-' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
+                    <a href="{{ asset('uploads/images300/' ~ image.name) }}" data-fancybox="gallery"><img src="{{ asset('uploads/images300/mini/300x300-' ~ image.name) | imagine_filter('thumbnail') }}" /></a>
                 {% endfor %}
             </div>
         </div>
