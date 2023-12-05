@@ -51,9 +51,44 @@ class ArticleController extends AbstractController
         // Par exemple, en utilisant la session :
         $request->getSession()->set('image_references', $imageReferences);
     
-        return new JsonResponse(['message' => 'Images uploaded successfully', 'references' => $imageReferences], 200);
+        return new JsonResponse([
+            'message' => 'Images uploaded successfully',
+            'fileName' => $resizedImageName, // Renvoyez le nom de fichier modifié
+            'references' => $imageReferences
+        ], 200);
         
     }
+
+
+    #[Route('/delete-image', name: 'delete_image', methods: ['POST'])]
+    public function deleteImage(Request $request, PictureService $pictureService): JsonResponse {
+        $imageName = $request->request->get('name');
+        
+        if ($pictureService->delete($imageName)) {
+            // Supprimer la référence de l'image de la session
+            $imageReferences = $request->getSession()->get('image_references', []);
+            if(($key = array_search($imageName, $imageReferences)) !== false) {
+                unset($imageReferences[$key]);
+                $request->getSession()->set('image_references', $imageReferences);
+            }
+    
+            return new JsonResponse(['status' => 'success', 'message' => 'Image deleted successfully']);
+        }
+    
+        return new JsonResponse(['status' => 'error', 'message' => 'Image not found']);
+    }
+    
+    #[Route('/clear-temp-images', name: 'clear_temp_images', methods: ['POST'])]
+    public function clearTempImages(Request $request, PictureService $pictureService): JsonResponse {
+        // Supprimer les images physiques
+        $pictureService->clearTempImages();
+    
+        // Nettoyer également les références d'images dans la session
+        $request->getSession()->remove('image_references');
+    
+        return new JsonResponse(['status' => 'success', 'message' => 'Temporary images and references cleared']);
+    }
+    
     
 
     #[Route('/ajouter-une-nouvelle-annonce', name: 'app_new.ad', methods: ['GET', 'POST'])]
@@ -69,7 +104,7 @@ class ArticleController extends AbstractController
             $manager->flush(); // Flush ici pour que l'article obtienne un ID
             
             $imageReferences = $request->getSession()->get('image_references', []);
-            
+
             foreach ($imageReferences as $imageName) {
                 $img = new ArticleImage();
                 $img->setName($imageName);
@@ -81,7 +116,7 @@ class ArticleController extends AbstractController
             // Effacer les références d'image de la session
             $request->getSession()->remove('image_references');
             $this->addFlash('success', 'Votre annonce a été créée avec succès!');
-            return $this->redirectToRoute('app_ad');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('pages/article/new.html.twig', ['form' => $form->createView()]);

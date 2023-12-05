@@ -15,7 +15,7 @@ class PictureService
         $this->params = $params;
     }
 
-    public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 250, ?int $height = 250)
+    public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 300, ?int $height = 300)
     {
         // On donne un nouveau nom à l'image
         $fichier = md5(uniqid(rand(), true)) . '.webp';
@@ -86,27 +86,52 @@ class PictureService
         return $fichier;
     }
 
-    public function delete(string $fichier, ?string $folder = '', ?int $width = 250, ?int $height = 250)
+    public function delete(string $fichier, ?string $folder = '', ?int $width = 300, ?int $height = 300)
     {
-        if($fichier !== 'default.webp'){
+        if ($fichier !== 'default.webp') 
+        {
             $success = false;
             $path = $this->params->get('images_directory') . $folder;
-
-            $mini = $path . '/mini/' . $width . 'x' . $height . '-' . $fichier;
-
-            if(file_exists($mini)){
-                unlink($mini);
+        
+            // Suppression du fichier original
+            $filePath = $path . '/' . $fichier;
+            if (file_exists($filePath)) {
+                unlink($filePath);
                 $success = true;
             }
-
-            $original = $path . '/' . $fichier;
-
-            if(file_exists($original)){
-                unlink($original);
+    
+            // Suppression de l'image dans le sous-dossier 'mini' avec le préfixe
+            $miniPath = $path . '/mini/' . $width . 'x' . $height . '-' . $fichier;
+            if (file_exists($miniPath)) {
+                unlink($miniPath);
                 $success = true;
             }
+    
             return $success;
-        }
+        } 
         return false;
     }
+    
+    public function clearTempImages()
+    {
+        $path = $this->params->get('images_directory');
+    
+        // Supprimer tous les fichiers dans le dossier principal
+        $this->deleteFilesInDirectory($path);
+    
+        // Supprimer tous les fichiers dans le dossier 'mini'
+        $miniPath = $path . '/mini';
+        $this->deleteFilesInDirectory($miniPath);
+    }
+    
+
+    private function deleteFilesInDirectory($directory)
+{
+    $files = glob($directory . '/*'); // Modifier le filtre si nécessaire
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        }
+    }
+}
 }
