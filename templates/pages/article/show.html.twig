@@ -40,22 +40,75 @@
             <p>Prix non renseigné</p>
         {% endif %}
     </div>
-
-    <div class="mt-4">
-        {{ article.description|raw }}
+    <div>
+        <div>
+            <hr>
+            <div> 
+                <p class="mx-4"> {{ article.price }} €</p>
+            </div>
+            <div>
+                <p>{{article.city}}</p>
+            </div>
+            <div class="d-flex">
+                <div class="mx-4 border mb-4 p-4">
+                    <p class="">Numéro de l'annonce : </p>
+                    <p>{{article.id}} </p>
+                </div>
+                 <div class="mx-4 border mb-4 p-4">
+                    <p class="">Marque : </p>
+                    <p>{{article.voitures.makeOfCar}} </p>
+                </div>
+                 <div class="mx-4 border mb-4 p-4">
+                    <p class="">Model : </p>
+                    <p>{{article.voitures.carModel}} </p>
+                </div>
+                <div class="mx-4 border mb-4 p-4">
+                    <p class="">Type de véhicule : </p>
+                    <p>{{article.voitures.vehicleType}} </p>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex">
+                <div class="mx-4 border mb-4 p-4">
+                    <p class="">Puissance : </p>
+                    <p>{{article.voitures.fiscalPower}} cv</p>
+                </div>
+                 <div class="mx-4 border mb-4 p-4">
+                    <p class="">Permis de conduire: </p>
+                    <p>{{article.voitures.driverLicense}} </p>
+                </div>
+                 <div class="mx-4 border mb-4 p-4">
+                    <p class="">Boite de vitesse : </p>
+                    <p>{{article.voitures.gearbox}} </p>
+                </div>
+                <div class="mx-4 border mb-4 p-4">
+                    <p class="">Type de véhicule : </p>
+                    <p>{{article.voitures.vehicleType}} </p>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex">
+                <div class="mx-4 border mb-4 p-4">
+                    <p class="">Nombre de place : </p>
+                    <p>{{article.voitures.numberOfPlaces}}</p>
+                </div>
+                 <div class="mx-4 border mb-4 p-4">
+                    <p class="">Nombre de siége: </p>
+                    <p>{{article.voitures.numberOfSeats}} </p>
+                </div>
+                 <div class="mx-4 border mb-4 p-4">
+                    <p class="">Couleur : </p>
+                    <p>{{article.voitures.color}} </p>
+                </div>
+            </div>
+        </div>    
+        <div>
+            <h2>Description</h2>
+            <div class="mt-4 border mb-4 pb-4 pt-4 px-4">
+                {{ article.description|raw }}
+            </div>
+        </div> 
     </div>
-
-    {% if article.apartmentForSale %}
-    <div class="mt-4">
-        <p>Superficie de l'appartement : {{ article.apartmentForSale.livingArea }} m²</p>
-    </div>
-    {% endif %}
-
-    {% if  article.camions %}
-    <div class="mt-4">
-        <p>Anné : {{ article.camions.annee}}</p>
-    </div>
-    {% endif %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
